@@ -1,6 +1,8 @@
-# tasklist
+# Task List Server
 
-### Central server for a standalone template email service
+Go service for Task List
+
+## [API Documentation](https://documenter.getpostman.com/view/32343835/2sAYkKGcHH)
 
 ## Prerequisites
 
@@ -10,7 +12,7 @@
 ## Getting started
 
 - Run `go mod download` to download all dependencies
-- Run `go run ./src/main.go` to start the development server without live reloading
+- Run `go run ./src/server.go` to start the development server without live reloading
 - Run `air` to start the development server with hot reloading
 
-- Optionally, run `pnpm install` to setup git hooks
+- Optionally, run `bun install` (or the package manager of your choice) to setup git hooks

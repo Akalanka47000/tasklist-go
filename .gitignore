@@ -1,0 +1,7 @@
+.air
+.env
+node_modules
+pnpm-lock.yaml
+yarn.lock
+bun.lock
+package-lock.json

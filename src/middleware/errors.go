@@ -5,7 +5,6 @@ import (
 	"tasklist/src/global"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -21,7 +20,6 @@ func ErrorHandler(ctx *fiber.Ctx, err error) error {
 		code = fiber.StatusBadRequest
 		message = "Resource already exists"
 	}
-	log.Error("Request error: ", err.Error())
 	return ctx.Status(code).JSON(global.Response[*interface{}]{
 		Message: message,
 	})

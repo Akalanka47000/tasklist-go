@@ -12,7 +12,7 @@ Go service for Task List
 ## Getting started
 
 - Run `go mod download` to download all dependencies
-- Run `go run ./src/server.go` to start the development server without live reloading
+- Run `go run ./src` to start the development server without live reloading
 - Run `air` to start the development server with hot reloading
 
 - Optionally, run `bun install` (or the package manager of your choice) to setup git hooks

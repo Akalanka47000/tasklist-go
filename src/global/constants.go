@@ -1,5 +1,11 @@
 package global
 
 const (
-	HeaderXCorrelationID = "X-Correlation-ID"
+	HdrXCorrelationID = "X-Correlation-ID"
+	HdrUserAgent      = "User-Agent"
+	HdrUserID         = "X-User-ID"
+)
+
+const (
+	CtxCorrelationID = "correlation-id"
 )

@@ -7,10 +7,11 @@ import (
 )
 
 type Config struct {
-	Port        int    `mapstructure:"PORT"`
-	Host        string `mapstructure:"HOST"`
-	DatabaseUrl string `mapstructure:"DB_URL" validate:"required"`
-	JWTSecret   string `mapstructure:"JWT_SECRET" validate:"required"`
+	Port            int    `mapstructure:"PORT"`
+	Host            string `mapstructure:"HOST"`
+	DatabaseUrl     string `mapstructure:"DB_URL" validate:"required"`
+	JWTSecret       string `mapstructure:"JWT_SECRET" validate:"required"`
+	FrontendBaseUrl string `mapstructure:"FRONTEND_BASE_URL" validate:"url"`
 }
 
 var Env *Config
@@ -18,6 +19,7 @@ var Env *Config
 func setDefaults() {
 	viper.SetDefault("PORT", 8080)
 	viper.SetDefault("HOST", "0.0.0.0")
+	viper.SetDefault("FRONTEND_BASE_URL", "http://localhost:3000")
 }
 
 func Load() {

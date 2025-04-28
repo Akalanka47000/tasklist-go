@@ -8,13 +8,14 @@ import (
 	"tasklist/src/modules"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/helmet"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
-	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
+	"go.uber.org/zap"
 )
 
 var service = "Todo Service"
@@ -31,11 +32,26 @@ func app() *fiber.App {
 		ErrorHandler:      middleware.ErrorHandler,
 	})
 
-	app.Hooks().OnShutdown(database.Disconnect)
+	app.Use(recover.New(recover.Config{
+		EnableStackTrace: true,
+		StackTraceHandler: func(c *fiber.Ctx, e any) {
+			log.Error(e, zap.Stack("stacktrace"))
+		},
+	}))
 
-	app.Use(cors.New())
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     config.Env.FrontendBaseUrl,
+		AllowCredentials: true,
+	}))
 
 	app.Use(helmet.New())
+
+	app.Use(requestid.New(requestid.Config{
+		Header:     global.HdrXCorrelationID,
+		ContextKey: global.CtxCorrelationID,
+	}))
+
+	app.Use(middleware.Zapped)
 
 	app.Use(limiter.New(limiter.Config{
 		Max: 100,
@@ -51,19 +67,11 @@ func app() *fiber.App {
 		CheckFunctions: map[string]func() bool{},
 	}))
 
-	app.Use(recover.New())
-
 	app.Get("/metrics", monitor.New())
 
-	app.Use(requestid.New(requestid.Config{
-		Header: global.HeaderXCorrelationID,
-	}))
-
-	app.Use(logger.New(logger.Config{
-		Format: "${pid} ${locals:requestid} ${status} - ${method} ${path}​\n",
-	}))
-
 	app.Mount("/api", modules.New())
+
+	app.Hooks().OnShutdown(database.Disconnect)
 
 	return app
 }

@@ -20,10 +20,8 @@ import (
 
 var service = "Todo Service"
 
-func app() *fiber.App {
-
-	config.Load()
-
+// Initializes the Fiber application with middleware, routes, and database connection.
+func bootstrapApp() *fiber.App {
 	database.Connect()
 
 	app := fiber.New(fiber.Config{
@@ -70,8 +68,6 @@ func app() *fiber.App {
 	app.Get("/metrics", monitor.New())
 
 	app.Mount("/api", modules.New())
-
-	app.Hooks().OnShutdown(database.Disconnect)
 
 	return app
 }

@@ -1,9 +1,9 @@
 package global
 
 const (
-	HdrXCorrelationID = "X-Correlation-ID"
-	HdrUserAgent      = "User-Agent"
-	HdrUserID         = "X-User-ID"
+	HdrXCorrelationID     = "X-Correlation-ID"
+	HdrXHostname          = "X-Hostname"
+	HdrXServiceRequestKey = "X-Service-Request-Key"
 )
 
 const (

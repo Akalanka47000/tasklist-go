@@ -1,15 +1,17 @@
-FROM golang:1.23
+FROM golang:1.24-alpine AS builder
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+COPY . .
 
-RUN go mod download
+RUN go build -a -o ./bin/server ./src
 
-COPY *.go ./
+FROM ubuntu:22.04 AS runner
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o ./tasklist ./src
+WORKDIR /app
+
+COPY --from=builder /app/bin/ .
 
 EXPOSE 8080
 
-CMD ["./tasklist"]
+ENTRYPOINT ["./server"]

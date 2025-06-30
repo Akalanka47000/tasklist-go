@@ -10,9 +10,29 @@ import (
 	"go.uber.org/zap"
 )
 
-func getLogFields(c *fiber.Ctx) []zap.Field {
+// List of paths which will be ignored by the logger.
+var ZapWhitelists = []string{
+	"/system/health",
+	"/system/liveness",
+	"/system/readiness",
+}
+
+func getZapLogFields(c *fiber.Ctx) []zap.Field {
 	return []zap.Field{
 		zap.String(global.CtxCorrelationID, lo.Cast[string](c.Locals(global.CtxCorrelationID))),
+	}
+}
+
+func getLogFields(c *fiber.Ctx) []any {
+	headers := c.GetReqHeaders()
+	return []any{
+		"ip", c.IP(),
+		"status", c.Response().StatusCode(),
+		"method", c.Method(),
+		"path", c.Path(),
+		"user-agent", lo.FirstOrEmpty(headers[fiber.HeaderUserAgent]),
+		"payload", string(c.Body()),
+		"query", c.Queries(),
 	}
 }
 
@@ -24,19 +44,35 @@ func Zapped(c *fiber.Ctx) error {
 
 	log.SetLogger(fiberzap.NewLogger(fiberzap.LoggerConfig{
 		ZapOptions: []zap.Option{
-			zap.Fields(getLogFields(c)...),
+			zap.Fields(getZapLogFields(c)...),
 		},
 	}))
+
+	path := c.Path()
+
+	if lo.Contains(ZapWhitelists, path) {
+		return c.Next()
+	}
+
+	log.Infow("Request initiated", getLogFields(c)...)
 
 	return fiberzap.New(fiberzap.Config{
 		Logger: logger,
 		FieldsFunc: func(c *fiber.Ctx) []zap.Field {
-			headers := c.GetReqHeaders()
 			return append(
-				getLogFields(c),
-				zap.Any("user-agent", lo.FirstOrEmpty(headers[global.HdrUserAgent])),
-				zap.Any("user-id", lo.FirstOrEmpty(headers[global.HdrUserID])),
+				getZapLogFields(c),
+				zap.String("path", path),
+				zap.Any("query", c.Queries()),
 			)
 		},
+		Fields:   []string{"latency", "status", "ip", "method"},
+		Messages: []string{"Server error", "Client error", "Request completed"},
 	})(c)
+}
+
+// fiberzapPostRecoveryLog is a temporary solution invoked at the default `errorHandler`
+// to log the status of failed http requests since the panic + recover flow we use
+// doesn't trigger the fiberzap logger on request completion.
+func fiberzapPostRecoveryLog(c *fiber.Ctx) {
+	log.Errorw("Request failed", getLogFields(c)...)
 }

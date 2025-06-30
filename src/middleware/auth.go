@@ -1,10 +1,12 @@
 package middleware
 
 import (
-	"tasklist/src/modules/users/api/v1/models"
+	"tasklist/src/config"
+	"tasklist/src/global"
 	"tasklist/src/utils"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/samber/lo"
 )
 
 func Protect(ctx *fiber.Ctx) error {
@@ -17,10 +19,14 @@ func Protect(ctx *fiber.Ctx) error {
 	return ctx.Next()
 }
 
-func AdminProtect(ctx *fiber.Ctx) error {
-	user := ctx.Locals("user").(*models.User)
-	if user.Role != models.Admin {
-		panic(fiber.NewError(fiber.StatusUnauthorized, "You are not authorized to access this resource"))
+// Protects an API route by checking if the request contains a valid service request key.
+func Internal(ctx *fiber.Ctx) error {
+	if config.Env.ServiceRequestKey == "" {
+		return ctx.Next()
+	}
+	if lo.CoalesceOrEmpty(ctx.Get(global.HdrXServiceRequestKey), ctx.Query("token")) !=
+		config.Env.ServiceRequestKey {
+		panic(fiber.NewError(fiber.StatusForbidden, "You are not permitted to access this resource"))
 	}
 	return ctx.Next()
 }

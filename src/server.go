@@ -5,17 +5,19 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"tasklist/src/app"
 	"tasklist/src/config"
-	"tasklist/src/database"
+	"tasklist/src/global"
 	"time"
 
+	"github.com/elcengine/elemental/core"
 	"github.com/gofiber/fiber/v2/log"
 )
 
 func main() {
 	config.Load()
 
-	app := bootstrapApp()
+	app := app.New()
 
 	go func() {
 		err := app.Listen(fmt.Sprintf(":%d", config.Env.Port))
@@ -34,9 +36,11 @@ func main() {
 
 	app.Shutdown()
 
-	log.Info("Server shutdown complete. Exiting after 30 seconds")
+	log.Info("Server shutdown complete. Exiting after 10 seconds")
 
-	time.Sleep(30 * time.Second) // Wait for 30 seconds before closing any open connections
+	time.Sleep(10 * time.Second)
 
-	database.Disconnect()
+	elemental.Disconnect()
+
+	global.ExecuteShutdownHooks()
 }

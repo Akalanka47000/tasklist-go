@@ -9,7 +9,7 @@ import (
 
 func New() *fiber.App {
 	v1 := fiber.New()
-	v1.Post("/login", m.Validate[dto.LoginReq](m.Body), Login)
-	v1.Post("/register", m.Validate[dto.RegisterReq](m.Body), Register)
+	v1.Post("/login", m.Zelebrate[dto.LoginRequest](m.ZelebrateSegmentBody), LoginHandler)
+	v1.Post("/register", m.Zelebrate[dto.RegisterRequest](m.ZelebrateSegmentBody), RegisterHandler)
 	return v1
 }

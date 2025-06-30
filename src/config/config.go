@@ -1,17 +1,24 @@
 package config
 
 import (
+	"path/filepath"
+	"reflect"
+	"runtime"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2/log"
+	"github.com/samber/lo"
 	"github.com/spf13/viper"
 )
 
 type Config struct {
-	Port            int    `mapstructure:"PORT"`
-	Host            string `mapstructure:"HOST"`
-	DatabaseUrl     string `mapstructure:"DB_URL" validate:"required"`
-	JWTSecret       string `mapstructure:"JWT_SECRET" validate:"required"`
-	FrontendBaseUrl string `mapstructure:"FRONTEND_BASE_URL" validate:"url"`
+	Port              int    `mapstructure:"PORT"`
+	Host              string `mapstructure:"HOST"`
+	FrontendBaseUrl   string `mapstructure:"FRONTEND_BASE_URL" validate:"url"`
+	DatabaseURL       string `mapstructure:"DB_URL" validate:"required,mongodb_connection_string"`
+	ServiceRequestKey string `mapstructure:"SERVICE_REQUEST_KEY" validate:"required"` // Key to protect internal routes
+	JWTSecret         string `mapstructure:"JWT_SECRET" validate:"required"`
+	CI                bool   `mapstructure:"CI"`
 }
 
 var Env *Config
@@ -19,19 +26,27 @@ var Env *Config
 func setDefaults() {
 	viper.SetDefault("PORT", 8080)
 	viper.SetDefault("HOST", "0.0.0.0")
-	viper.SetDefault("FRONTEND_BASE_URL", "http://localhost:3000")
+	viper.SetDefault("FRONTEND_BASE_URL", "http://localhost:5173")
 }
 
 func Load() {
-	viper.AddConfigPath(".")
 	viper.SetConfigName(".env")
 	viper.SetConfigType("env")
 
-	setDefaults()
+	_, b, _, _ := runtime.Caller(0)
+	viper.AddConfigPath(filepath.Dir(b) + "/../..") // Set like this so it can be loaded by test suites as well
 
 	if err := viper.ReadInConfig(); err != nil {
-		log.Fatal("Error reading env file", err)
+		typ := reflect.TypeOf(Env).Elem()
+		for i := range typ.NumField() {
+			viper.BindEnv(typ.Field(i).Tag.Get("mapstructure"))
+		}
 	}
+
+	lo.Try(func() error {
+		setDefaults()
+		return nil
+	})
 
 	if err := viper.Unmarshal(&Env); err != nil {
 		log.Fatal(err)

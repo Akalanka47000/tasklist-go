@@ -1,20 +1,18 @@
 package dto
 
-import "tasklist/src/modules/users/api/v1/models"
+import . "tasklist/src/modules/users/api/v1/models"
 
-type LoginReq struct {
+type LoginRequest struct {
 	Email    string `validate:"required,email"`
 	Password string `validate:"required,min=8"`
 }
 
-type LoginRes struct {
-	AccessToken  string      `json:"access_token"`
-	RefreshToken string      `json:"refresh_token"`
-	User         models.User `json:"user"`
-}
+type LoginResponse = User
 
-type RegisterReq struct {
+type RegisterRequest struct {
 	Name     string `validate:"required"`
 	Email    string `validate:"required,email"`
 	Password string `validate:"required,min=8"`
 }
+
+type RegisterResponse = User

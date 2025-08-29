@@ -21,53 +21,21 @@ const (
 	ZelebrateSegmentHeaders ZelebrateSegment = "headers"
 )
 
+const (
+	CtxZelebrateRequest = "zelebrate_request"
+)
+
 // Zelebrate is a middleware function that validates one or more of the body, params, or query of the request
 // against the given struct type T.
 func Zelebrate[T any](segments ...ZelebrateSegment) func(*fiber.Ctx) error {
 	return func(ctx *fiber.Ctx) error {
-		target := new(T)
-
-		targetValue := reflect.ValueOf(target).Elem()
-
-		for _, segment := range segments {
-			segmentTarget := new(T)
-			var err error
-			switch segment {
-			case ZelebrateSegmentBody:
-				err = ctx.BodyParser(segmentTarget)
-			case ZelebrateSegmentParams:
-				err = ctx.ParamsParser(segmentTarget)
-			case ZelebrateSegmentQuery:
-				err = ctx.QueryParser(segmentTarget)
-			case ZelebrateSegmentHeaders:
-				*segmentTarget = lo.CastJSON[T](ctx.GetReqHeaders())
-			}
-			if err != nil {
-				return fiber.NewError(fiber.StatusBadRequest, err.Error())
-			}
-			if len(segments) == 1 {
-				target = segmentTarget
-			} else {
-				segmentValue := reflect.ValueOf(segmentTarget).Elem()
-				for i := 0; i < segmentValue.NumField(); i++ {
-					field := segmentValue.Field(i)
-					if field.IsZero() {
-						continue
-					}
-					targetField := targetValue.Field(i)
-					if targetField.CanSet() {
-						targetField.Set(field)
-					}
-				}
-			}
-		}
-
+		request := lo.Must(parseRequest[T](ctx, segments...))
 		firstFormattedErr := ""
-		errs := validate.Struct(target)
+		errs := validate.Struct(request)
 		if errs != nil {
-			reflectedTarget := reflect.TypeOf(target).Elem()
+			reflectedRequest := reflect.TypeOf(request).Elem()
 			for _, err := range lo.Cast[validator.ValidationErrors](errs) {
-				field, ok := reflectedTarget.FieldByName(err.StructField())
+				field, ok := reflectedRequest.FieldByName(err.StructField())
 				if ok {
 					messages := field.Tag.Get("messages")
 					for message := range strings.SplitSeq(messages, ",") {
@@ -90,6 +58,49 @@ func Zelebrate[T any](segments ...ZelebrateSegment) func(*fiber.Ctx) error {
 		if firstFormattedErr != "" {
 			panic(fiber.NewError(fiber.StatusUnprocessableEntity, firstFormattedErr))
 		}
+
+		ctx.Locals(CtxZelebrateRequest, request)
+
 		return ctx.Next()
 	}
+}
+
+// ZelebrateRequest extracts the validated struct of type T from the context
+func ZelebrateRequest[T any](ctx *fiber.Ctx) *T {
+	return ctx.Locals(CtxZelebrateRequest).(*T)
+}
+
+// Parses the specified segments of the request into a struct of type T
+// thus simplifying the way that they can be accessed.
+func parseRequest[T any](ctx *fiber.Ctx, segments ...ZelebrateSegment) (*T, error) {
+	target := new(T)
+	for _, segment := range segments {
+		var err error
+		switch segment {
+		case ZelebrateSegmentBody:
+			err = ctx.BodyParser(target)
+		case ZelebrateSegmentParams:
+			err = ctx.ParamsParser(target)
+		case ZelebrateSegmentQuery:
+			err = ctx.QueryParser(target)
+		case ZelebrateSegmentHeaders:
+			headers := ctx.GetReqHeaders()
+			targetRef := reflect.ValueOf(target).Elem()
+			targetType := targetRef.Type()
+			for i := 0; i < targetRef.NumField(); i++ {
+				field := targetType.Field(i)
+				if headerName, ok := field.Tag.Lookup("json"); ok {
+					if headerValue, exists := headers[lo.Capitalize(strings.ReplaceAll(headerName, ",omitempty", ""))]; exists {
+						if targetRef.Field(i).CanSet() {
+							targetRef.Field(i).Set(reflect.ValueOf(lo.LastOrEmpty(headerValue)))
+						}
+					}
+				}
+			}
+		}
+		if err != nil {
+			return nil, fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+	}
+	return target, nil
 }

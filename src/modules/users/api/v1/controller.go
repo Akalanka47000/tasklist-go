@@ -2,6 +2,7 @@ package v1
 
 import (
 	"tasklist/src/global"
+	"tasklist/src/middleware"
 	"tasklist/src/modules/users/api/v1/dto"
 	"tasklist/src/modules/users/api/v1/models"
 
@@ -11,12 +12,11 @@ import (
 )
 
 func CreateUserHandler(c *fiber.Ctx) error {
-	payload := new(dto.CreateUserRequest)
-	c.BodyParser(payload)
+	req := middleware.ZelebrateRequest[dto.CreateUserRequest](c)
 	result := CreateUser(models.User{
-		Email:    &payload.Email,
-		Name:     &payload.Name,
-		Password: &payload.Password,
+		Email:    &req.Email,
+		Name:     &req.Name,
+		Password: &req.Password,
 	})
 	return c.Status(fiber.StatusCreated).JSON(global.Response[dto.CreateUserResponse]{
 		Data:    &result,
@@ -33,7 +33,8 @@ func GetUsersHandler(c *fiber.Ctx) error {
 }
 
 func GetUserHandler(c *fiber.Ctx) error {
-	result := GetUserByID(c.Params("id"))
+	req := middleware.ZelebrateRequest[dto.GetUserRequest](c)
+	result := GetUserByID(req.ID)
 	return c.JSON(global.Response[dto.GetUserResponse]{
 		Data:    result,
 		Message: "User fetched successfully!",
@@ -41,12 +42,11 @@ func GetUserHandler(c *fiber.Ctx) error {
 }
 
 func UpdateUserHandler(c *fiber.Ctx) error {
-	payload := new(dto.UpdateUserRequest)
-	c.BodyParser(payload)
-	result := UpdateUserByID(c.Params("id"), models.User{
-		Email:    payload.Email,
-		Name:     payload.Name,
-		Password: payload.Password,
+	req := middleware.ZelebrateRequest[dto.UpdateUserRequest](c)
+	result := UpdateUserByID(req.ID, models.User{
+		Email:    req.Email,
+		Name:     req.Name,
+		Password: req.Password,
 	})
 	return c.JSON(global.Response[dto.GetUserResponse]{
 		Data:    &result,
@@ -55,7 +55,8 @@ func UpdateUserHandler(c *fiber.Ctx) error {
 }
 
 func DeleteUserHandler(c *fiber.Ctx) error {
-	DeleteUserByID(c.Params("id"))
+	req := middleware.ZelebrateRequest[dto.DeleteUserRequest](c)
+	DeleteUserByID(c.Params(req.ID))
 	return c.Status(fiber.StatusOK).JSON(global.Response[any]{
 		Data:    nil,
 		Message: "User deleted successfully!",

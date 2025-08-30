@@ -14,7 +14,7 @@ var versioned = routing.VersionablePrefix("users")
 // Init provides the fx module for the user module
 var Init = append(
 	v1.Init,
-	fx.Provide(New),
+	fx.Provide(new),
 )
 
 // Params defines the dependencies for the user module
@@ -27,8 +27,8 @@ type Router struct {
 	V1 *fiber.App
 }
 
-// New creates a user module router with versioned sub fiber apps
-func New(params Params) *Router {
+// new creates a user module router with versioned sub fiber apps
+func new(params Params) *Router {
 	return &Router{
 		V1: params.V1,
 	}

@@ -7,7 +7,7 @@ import (
 )
 
 // Init provides the fx provider for the auth controller.
-var Init = fx.Provide(New)
+var Init = fx.Provide(new)
 
 // Params defines the dependencies for the auth controller
 type Params struct {

@@ -20,7 +20,7 @@ type service struct {
 	userService users.Service
 }
 
-func New(params Params) Service {
+func new(params Params) Service {
 	return &service{userService: params.UserService}
 }
 

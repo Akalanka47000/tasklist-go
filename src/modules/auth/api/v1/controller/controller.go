@@ -15,7 +15,7 @@ type Controller struct {
 	service service.Service
 }
 
-func New(params Params) *Controller {
+func new(params Params) *Controller {
 	return &Controller{
 		service: params.Service,
 	}

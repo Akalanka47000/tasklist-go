@@ -19,7 +19,7 @@ var Init = append(
 		},
 	),
 	fx.Provide(
-		fx.Annotate(New, fx.ResultTags(`name:"module:router"`)),
+		fx.Annotate(new, fx.ResultTags(`name:"module:router"`)),
 	),
 )
 
@@ -30,7 +30,7 @@ type Params struct {
 	Users *users.Router
 }
 
-func New(params Params) *fiber.App {
+func new(params Params) *fiber.App {
 	app := fiber.New()
 
 	params.Auth.ConfigureRoutes(app)

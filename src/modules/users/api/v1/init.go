@@ -18,7 +18,7 @@ var Init = []fx.Option{
 	service.Init,
 	controller.Init,
 	fx.Provide(
-		fx.Annotate(New, fx.ResultTags(`name:"users:router.v1"`)),
+		fx.Annotate(new, fx.ResultTags(`name:"users:router.v1"`)),
 	),
 }
 
@@ -28,8 +28,8 @@ type Params struct {
 	Controller *controller.Controller
 }
 
-// New creates a sub fiber app with user routes
-func New(params Params) *fiber.App {
+// new creates a sub fiber app with user routes
+func new(params Params) *fiber.App {
 	app := fiber.New()
 
 	app.Post("/", m.Zelebrate[dto.CreateUserRequest](m.ZelebrateSegmentBody), params.Controller.CreateUser)

@@ -12,7 +12,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// Controller handles HTTP requests for user operations
 type Controller struct {
 	service serviceContracts.Service
 }

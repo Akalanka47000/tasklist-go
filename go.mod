@@ -16,6 +16,7 @@ require (
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/spf13/viper v1.17.0
 	go.mongodb.org/mongo-driver v1.14.0
+	go.uber.org/fx v1.24.0
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.37.0
 )
@@ -63,7 +64,6 @@ require (
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
 	go.uber.org/dig v1.19.0 // indirect
-	go.uber.org/fx v1.24.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/exp v0.0.0-20240416160154-fe59bbe5cc7f // indirect
 	golang.org/x/net v0.39.0 // indirect

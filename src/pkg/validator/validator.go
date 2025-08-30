@@ -6,6 +6,7 @@ import (
 
 	v "github.com/go-playground/validator/v10"
 	"github.com/samber/lo"
+	"go.uber.org/fx"
 )
 
 type (
@@ -15,6 +16,8 @@ type (
 	Validator              = v.Validate
 	InvalidValidationError = v.InvalidValidationError
 )
+
+var Init = fx.Provide(New) // Provide a validator instance to the fx container
 
 func New() *v.Validate {
 	validator := v.New()

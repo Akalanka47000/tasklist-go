@@ -9,6 +9,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/samber/lo"
 )
 
 // MustGenerateUserToken generates a JWT token for the given user.
@@ -18,6 +19,7 @@ func MustGenerateUserToken(user User, refresh bool) string {
 	if refresh {
 		expiry = time.Hour * 24
 	}
+	user.Password = nil // Remove password before embedding in token
 	claims := jwt.MapClaims{
 		"iss":  "Tasklist",
 		"iat":  time.Now().Unix(),
@@ -25,11 +27,7 @@ func MustGenerateUserToken(user User, refresh bool) string {
 		"data": user,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	t, err := token.SignedString([]byte(config.Env.JWTSecret))
-	if err != nil {
-		panic(fiber.NewError(fiber.StatusInternalServerError, "Error generating jwt token"))
-	}
-	return t
+	return lo.Must(token.SignedString([]byte(config.Env.JWTSecret)))
 }
 
 // ValidateUserToken validates a given JWT token and parses the user information from it.

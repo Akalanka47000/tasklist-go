@@ -5,8 +5,6 @@ import (
 	"tasklist/src/global"
 	"tasklist/src/middleware"
 
-	"tasklist/src/modules"
-
 	elemental "github.com/elcengine/elemental/core"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -19,13 +17,14 @@ import (
 var ServiceName = "Todo Service"
 
 // Creates and returns a Fiber application with middleware, routes, and database connection.
-func New() *fiber.App {
+func New(params Params) *fiber.App {
 	elemental.Connect(config.Env.DatabaseURL)
 
 	app := fiber.New(fiber.Config{
-		AppName:      ServiceName,
-		ErrorHandler: middleware.ErrorHandler,
-		BodyLimit:    512 * 1024, // 512 KB
+		AppName:           ServiceName,
+		ErrorHandler:      middleware.ErrorHandler,
+		BodyLimit:         512 * 1024, // 512 KB,
+		EnablePrintRoutes: true,
 	})
 
 	app.Use(recover.New(recover.Config{
@@ -69,7 +68,7 @@ func New() *fiber.App {
 		},
 	}))
 
-	app.Mount("/api", modules.New())
+	app.Mount("/api", params.Modules)
 
 	return app
 }

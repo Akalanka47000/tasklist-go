@@ -1,46 +1,69 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	"os"
-	"os/signal"
-	"syscall"
 	"tasklist/src/app"
 	"tasklist/src/config"
 	"tasklist/src/global"
-	"time"
+	"tasklist/src/pkg"
 
-	"github.com/elcengine/elemental/core"
+	elemental "github.com/elcengine/elemental/core"
+	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
+	"go.uber.org/fx"
 )
 
 func main() {
 	config.Load()
 
-	app := app.New()
+	app := fx.New(
+		append(
+			append(
+				app.Init,
+				pkg.Init...,
+			),
+			fx.Invoke(
+				fx.Annotate(registerLifecycle, fx.ParamTags(``, `name:"app:router"`)),
+			),
+		)...,
+	)
 
-	go func() {
-		err := app.Listen(fmt.Sprintf(":%d", config.Env.Port))
-		if err != nil {
-			log.Error("Failed to start server", err)
-		}
-	}()
+	app.Run()
+}
 
-	c := make(chan os.Signal, 1)
+// registerLifecycle sets up the server lifecycle hooks
+func registerLifecycle(lc fx.Lifecycle, app *fiber.App) {
+	lc.Append(fx.Hook{
+		OnStart: func(ctx context.Context) error {
+			// Start the server in a goroutine
+			go func() {
+				err := app.Listen(fmt.Sprintf(":%d", config.Env.Port))
+				if err != nil {
+					log.Error("Failed to start server", err)
+				}
+			}()
 
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+			log.Info(fmt.Sprintf("Server starting on port %d", config.Env.Port))
+			return nil
+		},
+		OnStop: func(ctx context.Context) error {
+			log.Info("Server shutdown initiated")
 
-	<-c // Waits for termination signal before proceeding
+			// Shutdown the fiber app
+			if err := app.Shutdown(); err != nil {
+				log.Error("Error during server shutdown", err)
+				return err
+			}
 
-	log.Info("Received SIGTERM. Server shutdown initiated")
+			// Disconnect from database
+			elemental.Disconnect()
 
-	app.Shutdown()
+			// Execute shutdown hooks
+			global.ExecuteShutdownHooks()
 
-	log.Info("Server shutdown complete. Exiting after 10 seconds")
-
-	time.Sleep(10 * time.Second)
-
-	elemental.Disconnect()
-
-	global.ExecuteShutdownHooks()
+			log.Info("Server shutdown complete")
+			return nil
+		},
+	})
 }

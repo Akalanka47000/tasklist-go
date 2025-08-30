@@ -1,9 +1,9 @@
 GO_TEST_ARGS ?= -v --count=1
 
 build:
-	go build -o ./bin/server .
+	go build -o ./bin/tasklist .
 start:
-	./bin/server
+	./bin/tasklist
 dev:
 	air
 format:

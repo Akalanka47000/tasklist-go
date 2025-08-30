@@ -11,6 +11,7 @@ import (
 	elemental "github.com/elcengine/elemental/core"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
+	"github.com/samber/lo"
 	"go.uber.org/fx"
 )
 
@@ -19,9 +20,11 @@ func main() {
 
 	app := fx.New(
 		append(
-			append(
-				app.Init,
-				pkg.Init...,
+			lo.Flatten(
+				[][]fx.Option{
+					app.Init,
+					pkg.Init,
+				},
 			),
 			fx.Invoke(
 				fx.Annotate(registerLifecycle, fx.ParamTags(``, `name:"app:router"`)),

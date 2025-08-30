@@ -20,7 +20,6 @@ type service struct {
 	repo repository.Repository
 }
 
-// New creates a new instance of the user service
 func New(params Params) Service {
 	return &service{
 		repo: params.Repository,
@@ -43,6 +42,10 @@ func (s *service) GetUsers(ctx context.Context, fqr fq.Result) elemental.Paginat
 
 func (s *service) GetUserByID(ctx context.Context, id string) *User {
 	return s.repo.GetUserByID(ctx, id)
+}
+
+func (s *service) GetUserByEmail(ctx context.Context, email string) *User {
+	return s.repo.GetUserByEmail(ctx, email)
 }
 
 func (s *service) UpdateUserByID(ctx context.Context, id string, user User) User {

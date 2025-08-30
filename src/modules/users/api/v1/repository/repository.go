@@ -15,7 +15,6 @@ type Repository = contracts.Repository // Repository defines the contract for us
 
 type repository struct{} // repository implements UserRepository
 
-// New creates a new instance of UserRepository
 func New() Repository {
 	return &repository{}
 }

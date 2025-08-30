@@ -17,7 +17,6 @@ type Controller struct {
 	service serviceContracts.Service
 }
 
-// New creates a new instance of the user controller
 func New(params Params) *Controller {
 	return &Controller{
 		service: params.Service,

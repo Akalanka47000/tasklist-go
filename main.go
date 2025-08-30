@@ -35,7 +35,7 @@ func main() {
 	app.Run()
 }
 
-// registerLifecycle sets up the server lifecycle hooks
+// Sets up the server lifecycle hooks
 func registerLifecycle(lc fx.Lifecycle, app *fiber.App) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {

@@ -1,7 +1,7 @@
 GO_TEST_ARGS ?= -v --count=1
 
 build:
-	go build -o ./bin/server ./src
+	go build -o ./bin/server .
 start:
 	./bin/server
 dev:

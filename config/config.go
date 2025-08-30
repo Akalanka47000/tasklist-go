@@ -37,7 +37,7 @@ func Load() {
 	viper.SetConfigType("env")
 
 	_, b, _, _ := runtime.Caller(0)
-	viper.AddConfigPath(filepath.Dir(b) + "/../..") // Set like this so it can be loaded by test suites as well
+	viper.AddConfigPath(filepath.Dir(b) + "/..") // Set like this so it can be loaded by test suites as well
 
 	if err := viper.ReadInConfig(); err != nil {
 		typ := reflect.TypeOf(Env).Elem()

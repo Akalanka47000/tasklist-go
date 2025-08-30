@@ -10,9 +10,8 @@ import (
 
 var versioned = routing.VersionablePrefix("users")
 
-func New() *fiber.App {
-	users := fiber.New()
-	users.All("/*", middleware.Internal)
-	users.Mount(versioned(1), v1.New())
-	return users
+func RegisterRoutes(router fiber.Router) {
+	router.All("/*", middleware.Internal)
+
+	router.Route(versioned(1), v1.RegisterRoutes)
 }

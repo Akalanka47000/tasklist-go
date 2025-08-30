@@ -13,7 +13,7 @@ import (
 
 func CreateUserHandler(c *fiber.Ctx) error {
 	req := middleware.ZelebrateRequest[dto.CreateUserRequest](c)
-	result := CreateUser(models.User{
+	result := CreateUser(c.Context(), models.User{
 		Email:    &req.Email,
 		Name:     &req.Name,
 		Password: &req.Password,
@@ -25,7 +25,7 @@ func CreateUserHandler(c *fiber.Ctx) error {
 }
 
 func GetUsersHandler(c *fiber.Ctx) error {
-	result := GetUsers(c.Locals(fqm.CtxKey).(fq.Result))
+	result := GetUsers(c.Context(), c.Locals(fqm.CtxKey).(fq.Result))
 	return c.JSON(global.Response[dto.GetUsersReponse]{
 		Data:    &result,
 		Message: "Users fetched successfully!",
@@ -34,7 +34,7 @@ func GetUsersHandler(c *fiber.Ctx) error {
 
 func GetUserHandler(c *fiber.Ctx) error {
 	req := middleware.ZelebrateRequest[dto.GetUserRequest](c)
-	result := GetUserByID(req.ID)
+	result := GetUserByID(c.Context(), req.ID)
 	return c.JSON(global.Response[dto.GetUserResponse]{
 		Data:    result,
 		Message: "User fetched successfully!",
@@ -43,7 +43,7 @@ func GetUserHandler(c *fiber.Ctx) error {
 
 func UpdateUserHandler(c *fiber.Ctx) error {
 	req := middleware.ZelebrateRequest[dto.UpdateUserRequest](c)
-	result := UpdateUserByID(req.ID, models.User{
+	result := UpdateUserByID(c.Context(), req.ID, models.User{
 		Email:    req.Email,
 		Name:     req.Name,
 		Password: req.Password,
@@ -56,7 +56,7 @@ func UpdateUserHandler(c *fiber.Ctx) error {
 
 func DeleteUserHandler(c *fiber.Ctx) error {
 	req := middleware.ZelebrateRequest[dto.DeleteUserRequest](c)
-	DeleteUserByID(c.Params(req.ID))
+	DeleteUserByID(c.Context(), c.Params(req.ID))
 	return c.Status(fiber.StatusOK).JSON(global.Response[any]{
 		Data:    nil,
 		Message: "User deleted successfully!",

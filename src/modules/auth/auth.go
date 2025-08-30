@@ -9,8 +9,6 @@ import (
 
 var versioned = routing.VersionablePrefix("auth")
 
-func New() *fiber.App {
-	auth := fiber.New()
-	auth.Mount(versioned(1), v1.New())
-	return auth
+func RegisterRoutes(router fiber.Router) {
+	router.Route(versioned(1), v1.RegisterRoutes)
 }

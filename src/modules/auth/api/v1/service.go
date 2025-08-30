@@ -1,44 +1,39 @@
 package v1
 
 import (
-	"fmt"
+	"context"
 	"tasklist/src/modules/auth/api/v1/dto"
-	user "tasklist/src/modules/users/api/v1"
 	"tasklist/src/modules/users/api/v1/models"
 	. "tasklist/src/modules/users/api/v1/models"
 	userrepo "tasklist/src/modules/users/api/v1/repository"
-	"tasklist/src/utils"
+	"tasklist/src/utils/hash"
+	jwtx "tasklist/src/utils/jwt"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
 	"github.com/samber/lo"
 )
 
-func login(c *fiber.Ctx, email, password string) (User, string, string) {
-	user := userrepo.GetUserByEmail(email)
+func login(ctx context.Context, email, password string) (User, string, string) {
+	user := userrepo.GetUserByEmail(ctx, email)
 	if user == nil {
 		panic(fiber.NewError(fiber.StatusUnauthorized, "Invalid credentials"))
 	}
-	passwordsMatch := utils.CompareStrHash(password, lo.FromPtr(user.Password))
+	passwordsMatch := hash.Compare(password, lo.FromPtr(user.Password))
 	if !passwordsMatch {
 		panic(fiber.NewError(fiber.StatusUnauthorized, "Invalid credentials"))
 	}
-	accessToken := utils.GenerateUserJWTToken(*user, false)
-	refreshToken := utils.GenerateUserJWTToken(*user, true)
+	accessToken := jwtx.MustGenerateUserToken(*user, false)
+	refreshToken := jwtx.MustGenerateUserToken(*user, true)
 	return *user, accessToken, refreshToken
 }
 
-func registerUser(c *fiber.Ctx, payload dto.RegisterRequest) *dto.LoginResponse {
-	insertedID := user.Repository().Create(models.User{
-		Name:     payload.Name,
-		Email:    payload.Email,
-		Password: utils.HashStr(payload.Password),
+func registerUser(ctx context.Context, payload dto.RegisterRequest) (User, string, string) {
+	user := userrepo.CreateUser(ctx, models.User{
+		Name:     &payload.Name,
+		Email:    &payload.Email,
+		Password: lo.ToPtr(hash.MustString(payload.Password)),
 	})
-	accessToken := utils.GenerateUserJWTToken(user, false)
-	refreshToken := utils.GenerateUserJWTToken(user, true)
-	return &dto.LoginResponse{
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
-		User:         user,
-	}
+	accessToken := jwtx.MustGenerateUserToken(user, false)
+	refreshToken := jwtx.MustGenerateUserToken(user, true)
+	return user, accessToken, refreshToken
 }

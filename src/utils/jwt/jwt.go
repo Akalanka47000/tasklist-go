@@ -1,16 +1,19 @@
-package utils
+// Custom utility functions for generating and validating JWT tokens.
+package jwtx
 
 import (
 	"encoding/json"
 	"tasklist/src/config"
-	"tasklist/src/modules/users/api/v1/models"
+	. "tasklist/src/modules/users/api/v1/models"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func GenerateUserJWTToken(user models.User, refresh bool) string {
+// MustGenerateUserToken generates a JWT token for the given user.
+// If refresh is true, it generates a refresh token with a longer expiry.
+func MustGenerateUserToken(user User, refresh bool) string {
 	expiry := time.Hour * 1
 	if refresh {
 		expiry = time.Hour * 24
@@ -29,19 +32,20 @@ func GenerateUserJWTToken(user models.User, refresh bool) string {
 	return t
 }
 
-func ValidateUserJWTToken(token string) *models.User {
-	parsedToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+// ValidateUserToken validates a given JWT token and parses the user information from it.
+func ValidateUserToken(token string) (*User, error) {
+	parsedToken, err := jwt.Parse(token, func(token *jwt.Token) (any, error) {
 		return []byte(config.Env.JWTSecret), nil
 	})
 	if err != nil || !parsedToken.Valid {
-		panic(fiber.NewError(fiber.StatusUnauthorized, "Invalid token"))
+		return nil, fiber.NewError(fiber.StatusUnauthorized, "Invalid token")
 	}
 	claims, ok := parsedToken.Claims.(jwt.MapClaims)
 	if !ok {
-		panic(fiber.NewError(fiber.StatusUnauthorized, "Invalid token"))
+		return nil, fiber.NewError(fiber.StatusUnauthorized, "Invalid token")
 	}
-	user := models.User{}
+	user := User{}
 	jsonString, _ := json.Marshal(claims["data"])
 	json.Unmarshal(jsonString, &user)
-	return &user
+	return &user, nil
 }

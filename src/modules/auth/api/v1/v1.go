@@ -7,9 +7,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func New() *fiber.App {
-	v1 := fiber.New()
-	v1.Post("/login", m.Zelebrate[dto.LoginRequest](m.ZelebrateSegmentBody), LoginHandler)
-	v1.Post("/register", m.Zelebrate[dto.RegisterRequest](m.ZelebrateSegmentBody), RegisterHandler)
-	return v1
+func RegisterRoutes(router fiber.Router) {
+	router.Post("/login", m.Zelebrate[dto.LoginRequest](m.ZelebrateSegmentBody), LoginHandler)
+	router.Post("/register", m.Zelebrate[dto.RegisterRequest](m.ZelebrateSegmentBody), RegisterHandler)
+	router.Get("/current", m.Protect, CurrentUserHandler)
+	router.Post("/logout", m.Protect, LogoutHandler)
 }

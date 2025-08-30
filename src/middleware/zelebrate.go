@@ -22,7 +22,7 @@ const (
 )
 
 const (
-	CtxZelebrateRequest = "zelebrate_request"
+	ctxZelebrateRequest = "zelebrate_request" // Key used to store the validated request in the context
 )
 
 // Zelebrate is a middleware function that validates one or more of the body, params, or query of the request
@@ -59,7 +59,7 @@ func Zelebrate[T any](segments ...ZelebrateSegment) func(*fiber.Ctx) error {
 			panic(fiber.NewError(fiber.StatusUnprocessableEntity, firstFormattedErr))
 		}
 
-		ctx.Locals(CtxZelebrateRequest, request)
+		ctx.Locals(ctxZelebrateRequest, request)
 
 		return ctx.Next()
 	}
@@ -67,7 +67,7 @@ func Zelebrate[T any](segments ...ZelebrateSegment) func(*fiber.Ctx) error {
 
 // ZelebrateRequest extracts the validated struct of type T from the context
 func ZelebrateRequest[T any](ctx *fiber.Ctx) *T {
-	return ctx.Locals(CtxZelebrateRequest).(*T)
+	return ctx.Locals(ctxZelebrateRequest).(*T)
 }
 
 // Parses the specified segments of the request into a struct of type T

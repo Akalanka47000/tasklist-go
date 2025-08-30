@@ -3,19 +3,37 @@ package middleware
 import (
 	"tasklist/src/config"
 	"tasklist/src/global"
-	"tasklist/src/utils"
+	"tasklist/src/modules/auth/utils/session"
+	jwtx "tasklist/src/utils/jwt"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/samber/lo"
 )
 
-func Protect(ctx *fiber.Ctx) error {
-	token := ctx.Get(fiber.HeaderAuthorization)
+// Extracts and validates a JWT bearer token from the Authorization header, if present.
+// If valid, the user information is stored in the request context.
+// If invalid or missing, an error is stored in the context for later handling.
+func Sentinel(ctx *fiber.Ctx) error {
+	token := ctx.Cookies(session.AccessTokenCookieName)
 	if token == "" {
-		panic(fiber.NewError(fiber.StatusUnauthorized, "Missing bearer token"))
+		ctx.Locals(global.CtxAuthorizerError, fiber.NewError(fiber.StatusUnauthorized, "Missing auth token"))
+		return ctx.Next()
 	}
-	user := utils.ValidateUserJWTToken(token[len("Bearer "):])
-	ctx.Locals("user", user)
+	user, err := jwtx.ValidateUserToken(token)
+	if err != nil {
+		ctx.Locals(global.CtxAuthorizerError, err)
+		return ctx.Next()
+	}
+	ctx.Locals(global.CtxUser, user)
+	return ctx.Next()
+}
+
+// Protects an API route by checking if the request has been recognized by the Sentinel middleware.
+func Protect(ctx *fiber.Ctx) error {
+	authorizerError := ctx.Locals(global.CtxAuthorizerError)
+	if authorizerError != nil {
+		panic(authorizerError)
+	}
 	return ctx.Next()
 }
 

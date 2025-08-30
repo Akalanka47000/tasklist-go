@@ -40,6 +40,8 @@ github.com/Akalanka47000/lo v1.0.0 h1:zudVPn8PiW0c3Orl+RWD8vo/YTdFJ/Nmdm0//zaXTb
 github.com/Akalanka47000/lo v1.0.0/go.mod h1:FMG1Ls13gSw8wfPV9OozXV7mAHeLY4Eo4zFHQFTTJcU=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
+github.com/akalanka47000/go-modkit/enums v1.0.1 h1:zcoV5dNf/QjkmLc+SaMAnzDXkU/eX/zuGJ7Szi6jUjw=
+github.com/akalanka47000/go-modkit/enums v1.0.1/go.mod h1:l83dL7WyqhWvE+apKG3Y2ZDG213NHr0UPK87QH1EvV8=
 github.com/akalanka47000/go-modkit/routing v1.0.1 h1:Ssnt5as7ryXxycHjiM13vlKK+/ZGd5mViipqbzSZ2zI=
 github.com/akalanka47000/go-modkit/routing v1.0.1/go.mod h1:FqwJ8xEzGP0wZ1rui0juWHY5HWXz3fOwnY8kxgBo5SE=
 github.com/andybalholm/brotli v1.1.1 h1:PR2pgnyFznKEugtsUo0xLdDop5SKXd5Qf5ysW+7XdTA=

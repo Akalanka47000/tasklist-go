@@ -45,6 +45,17 @@ func New() *fiber.App {
 		ContextKey: global.CtxCorrelationID,
 	}))
 
+	app.Use(limiter.New(limiter.Config{
+		Max: 100,
+		LimitReached: func(c *fiber.Ctx) error {
+			return c.Status(fiber.StatusTooManyRequests).JSON(global.Response[*interface{}]{
+				Message: "Too many requests, please try again later",
+			})
+		},
+	}))
+
+	app.Use(middleware.Sentinel)
+
 	app.Use(middleware.Zapped)
 
 	app.Use(middleware.Injectors...)
@@ -55,15 +66,6 @@ func New() *fiber.App {
 			"database": func() bool {
 				return elemental.Ping() == nil
 			},
-		},
-	}))
-
-	app.Use(limiter.New(limiter.Config{
-		Max: 100,
-		LimitReached: func(c *fiber.Ctx) error {
-			return c.Status(fiber.StatusTooManyRequests).JSON(global.Response[*interface{}]{
-				Message: "Too many requests, please try again later",
-			})
 		},
 	}))
 

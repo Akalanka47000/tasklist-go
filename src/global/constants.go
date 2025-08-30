@@ -7,5 +7,7 @@ const (
 )
 
 const (
-	CtxCorrelationID = "correlation-id"
+	CtxCorrelationID   = "correlation-id"
+	CtxUser            = "user"
+	CtxAuthorizerError = "authorizer-error"
 )

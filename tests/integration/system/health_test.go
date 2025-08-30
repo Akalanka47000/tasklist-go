@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"tasklist/src/app"
+	"tasklist/app"
 
 	"github.com/samber/lo"
 	. "github.com/smartystreets/goconvey/convey"

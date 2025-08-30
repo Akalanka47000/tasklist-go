@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"tasklist/src/config"
+	"tasklist/config"
 )
 
 // Initializes the configuration for the tests.

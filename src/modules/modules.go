@@ -26,16 +26,16 @@ var Init = append(
 // Params defines the dependencies for the user API
 type Params struct {
 	fx.In
-	Auth  *fiber.App `name:"auth:router"`
-	Users *fiber.App `name:"users:router"`
+	Auth  *auth.Router
+	Users *users.Router
 }
 
 func New(params Params) *fiber.App {
-	modules := fiber.New()
+	app := fiber.New()
 
-	modules.
-		Mount("/", params.Auth).
-		Mount("/", params.Users)
+	params.Auth.ConfigureRoutes(app)
 
-	return modules
+	params.Users.ConfigureRoutes(app)
+
+	return app
 }

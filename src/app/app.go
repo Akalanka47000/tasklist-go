@@ -21,10 +21,9 @@ func New(params Params) *fiber.App {
 	elemental.Connect(config.Env.DatabaseURL)
 
 	app := fiber.New(fiber.Config{
-		AppName:           ServiceName,
-		ErrorHandler:      middleware.ErrorHandler,
-		BodyLimit:         512 * 1024, // 512 KB,
-		EnablePrintRoutes: true,
+		AppName:      ServiceName,
+		ErrorHandler: middleware.ErrorHandler,
+		BodyLimit:    512 * 1024, // 512 KB,
 	})
 
 	app.Use(recover.New(recover.Config{

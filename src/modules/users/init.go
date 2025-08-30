@@ -11,27 +11,32 @@ import (
 
 var versioned = routing.VersionablePrefix("users")
 
-// Init provides the fx module for the user API
+// Init provides the fx module for the user module
 var Init = append(
 	v1.Init,
-	fx.Provide(
-		fx.Annotate(New, fx.ResultTags(`name:"users:router"`)),
-	),
+	fx.Provide(New),
 )
 
-// Params defines the dependencies for the user API
+// Params defines the dependencies for the user module
 type Params struct {
 	fx.In
 	V1 *fiber.App `name:"users:router.v1"`
 }
 
-// New creates a sub fiber app with user routes
-func New(params Params) *fiber.App {
-	app := fiber.New()
+type Router struct {
+	V1 *fiber.App
+}
 
+// New creates a user module router with versioned sub fiber apps
+func New(params Params) *Router {
+	return &Router{
+		V1: params.V1,
+	}
+}
+
+// Registers versioned routes for the entire user module
+func (r *Router) ConfigureRoutes(app *fiber.App) {
 	app.All("/*", middleware.Internal)
 
-	app.Mount(versioned(1), params.V1)
-
-	return app
+	app.Mount(versioned(1), r.V1)
 }

@@ -13,22 +13,27 @@ var versioned = routing.VersionablePrefix("auth")
 // Init provides the fx module for the auth API
 var Init = append(
 	v1.Init,
-	fx.Provide(
-		fx.Annotate(New, fx.ResultTags(`name:"auth:router"`)),
-	),
+	fx.Provide(New),
 )
 
-// Params defines the dependencies for the auth API
+// Params defines the dependencies for the auth module
 type Params struct {
 	fx.In
 	V1 *fiber.App `name:"auth:router.v1"`
 }
 
-// New creates a sub fiber app with auth routes
-func New(params Params) *fiber.App {
-	app := fiber.New()
+type Router struct {
+	V1 *fiber.App
+}
 
-	app.Mount(versioned(1), params.V1)
+// New creates an auth module router with versioned sub fiber apps
+func New(params Params) *Router {
+	return &Router{
+		V1: params.V1,
+	}
+}
 
-	return app
+// Registers versioned routes for the entire auth module
+func (r *Router) ConfigureRoutes(app *fiber.App) {
+	app.Mount(versioned(1), r.V1)
 }

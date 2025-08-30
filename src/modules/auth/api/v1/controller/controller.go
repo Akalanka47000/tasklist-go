@@ -4,7 +4,7 @@ import (
 	"tasklist/src/global"
 	"tasklist/src/middleware"
 	"tasklist/src/modules/auth/api/v1/dto"
-	"tasklist/src/modules/auth/api/v1/service"
+	service "tasklist/src/modules/auth/api/v1/service/contracts"
 	"tasklist/src/modules/auth/utils/session"
 	. "tasklist/src/modules/users/api/v1/models"
 

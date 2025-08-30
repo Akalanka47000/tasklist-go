@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"tasklist/src/modules/auth/api/v1/dto"
-	"tasklist/src/modules/auth/api/v1/service/contracts"
+	contracts "tasklist/src/modules/auth/api/v1/service/contracts"
 	"tasklist/src/modules/users/api/v1/models"
 	users "tasklist/src/modules/users/api/v1/service/contracts"
 	"tasklist/src/utils/hash"
@@ -13,14 +13,12 @@ import (
 	"github.com/samber/lo"
 )
 
-type Service = contracts.Service // Service defines the contract for auth service operations
-
 // service implements the Service interface for authentication logic.
 type service struct {
 	userService users.Service
 }
 
-func new(params Params) Service {
+func new(params Params) contracts.Service {
 	return &service{userService: params.UserService}
 }
 

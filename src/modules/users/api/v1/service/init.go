@@ -1,7 +1,7 @@
 package service
 
 import (
-	"tasklist/src/modules/users/api/v1/repository"
+	repository "tasklist/src/modules/users/api/v1/repository/contracts"
 
 	"go.uber.org/fx"
 )

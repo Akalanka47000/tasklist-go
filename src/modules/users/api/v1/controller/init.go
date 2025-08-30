@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"tasklist/src/modules/users/api/v1/service"
+	service "tasklist/src/modules/users/api/v1/service/contracts"
 
 	"go.uber.org/fx"
 )

@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 	. "tasklist/src/modules/users/api/v1/models"
-	"tasklist/src/modules/users/api/v1/repository"
+	repository "tasklist/src/modules/users/api/v1/repository/contracts"
 	"tasklist/src/modules/users/api/v1/service/contracts"
 	"tasklist/src/utils/hash"
 
@@ -13,14 +13,12 @@ import (
 	"github.com/samber/lo"
 )
 
-type Service = contracts.Service // Service defines the contract for user service operations
-
 // service implements the Service interface
 type service struct {
 	repo repository.Repository
 }
 
-func new(params Params) Service {
+func new(params Params) contracts.Service {
 	return &service{
 		repo: params.Repository,
 	}

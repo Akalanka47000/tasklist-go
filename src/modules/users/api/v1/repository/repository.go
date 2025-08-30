@@ -11,11 +11,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-type Repository = contracts.Repository // Repository defines the contract for user repository operations
-
 type repository struct{} // repository implements UserRepository
 
-func new() Repository {
+func new() contracts.Repository {
 	return &repository{}
 }
 

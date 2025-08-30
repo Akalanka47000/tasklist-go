@@ -26,9 +26,7 @@ func main() {
 					pkg.Init,
 				},
 			),
-			fx.Invoke(
-				fx.Annotate(registerLifecycle, fx.ParamTags(``, `name:"app:router"`)),
-			),
+			fx.Invoke(registerLifecycle),
 		)...,
 	)
 

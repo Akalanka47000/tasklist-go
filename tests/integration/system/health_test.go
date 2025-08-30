@@ -2,26 +2,22 @@ package system_test
 
 import (
 	"fmt"
-	"io"
-	"net/http"
-	"tasklist/app"
-
 	"github.com/samber/lo"
 	. "github.com/smartystreets/goconvey/convey"
-	"tasklist/tests"
+	"io"
+	"net/http"
+	"tasklist/tests/setup"
 	"testing"
 )
 
 func TestSystemHealthHandler(t *testing.T) {
 	t.Parallel()
 
-	tests.Setup()
+	Convey("returns ok", t, func(c C) {
+		app := ts.Prepare(t, c)
 
-	app := app.New()
-
-	Convey("returns ok", t, func() {
 		req, _ := http.NewRequest(http.MethodGet, "/system/health", nil)
-		res, err := app.Test(req, -1)
+		res, err := app.Test(req)
 
 		So(err, ShouldBeNil)
 

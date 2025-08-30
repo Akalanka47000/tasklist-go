@@ -1,6 +1,6 @@
 {
   "connection_str": "<DB_URL>",
-  "migrations_dir": "src/database/migrations",
-  "seeds_dir": "src/database/seeds",
+  "migrations_dir": "database/migrations",
+  "seeds_dir": "database/seeds",
   "changelog_collection": "changelog"
 }

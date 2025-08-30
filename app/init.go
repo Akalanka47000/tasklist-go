@@ -10,9 +10,7 @@ import (
 // Init provides the fx module for the main fiber app
 var Init = append(
 	modules.Init,
-	fx.Provide(
-		fx.Annotate(New, fx.ResultTags(`name:"app:router"`)),
-	),
+	fx.Provide(New),
 )
 
 // Params defines the dependencies for the main fiber app

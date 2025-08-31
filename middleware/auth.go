@@ -38,6 +38,7 @@ func Protect(ctx *fiber.Ctx) error {
 }
 
 // Protects an API route by checking if the request contains a valid service request key.
+// This is typically used for internal service-to-service communication.
 func Internal(ctx *fiber.Ctx) error {
 	if config.Env.ServiceRequestKey == "" {
 		return ctx.Next()

@@ -5,6 +5,8 @@ import (
 	"tasklist/global"
 	"tasklist/middleware"
 
+	"github.com/gofiber/contrib/swagger"
+
 	elemental "github.com/elcengine/elemental/core"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -65,6 +67,11 @@ func New(params Params) *fiber.App {
 				return elemental.Ping() == nil
 			},
 		},
+	}))
+
+	app.Use(swagger.New(swagger.Config{
+		Path:     "/docs",
+		FilePath: "./docs/swagger.json",
 	}))
 
 	app.Mount("/api", params.Modules)

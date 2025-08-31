@@ -44,3 +44,5 @@ teardown:
 mocks:
 	@command -v mockery >/dev/null 2>&1 || { echo >&2 "mockery not installed. Please install it with 'go install github.com/vektra/mockery/v3@latest'"; exit 1; }
 	mockery --config ./tests/mocks/mockery.yml
+swagger:
+	swag init -g main.go -o ./docs --parseDependency --parseInternal --outputTypes json

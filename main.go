@@ -15,6 +15,13 @@ import (
 	"go.uber.org/fx"
 )
 
+// @title Tasklist API
+// @version 1.0
+// @description API documentation for the Tasklist service.
+// @contact.name API Support
+// @contact.email support@example.com
+// @host localhost:8080
+// @BasePath /api
 func main() {
 	config.Load()
 

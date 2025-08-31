@@ -69,10 +69,13 @@ func New(params Params) *fiber.App {
 		},
 	}))
 
-	app.Use(swagger.New(swagger.Config{
-		Path:     "/docs",
-		FilePath: "./docs/swagger.json",
-	}))
+	if config.IsLocal() {
+		app.Use(swagger.New(swagger.Config{
+			Path:     "/docs",
+			FilePath: "./docs/swagger.json",
+			CacheAge: 5, // We want to always serve the latest documentation in local/dev environments
+		}))
+	}
 
 	app.Mount("/api", params.Modules)
 

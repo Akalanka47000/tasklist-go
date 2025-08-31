@@ -6,7 +6,7 @@ start:
 	./bin/tasklist
 dev:
 	go tool -modfile=go.tool.mod air
-format:
+fmt:
 	gofmt -w .
 test:
 	PARALLEL_CONVEY=false make test-lightspeed
@@ -41,4 +41,5 @@ teardown:
 mocks:
 	go tool -modfile=go.tool.mod mockery --config ./tests/mocks/mockery.yml
 swagger:
+	go tool -modfile=go.tool.mod swag fmt main.go
 	go tool -modfile=go.tool.mod swag init -g main.go -o ./docs --outputTypes json

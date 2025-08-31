@@ -8,8 +8,8 @@ import (
 	"context"
 	"tasklist/modules/users/api/v1/models"
 
-	"github.com/elcengine/elemental/core"
-	"github.com/elcengine/elemental/plugins/filterquery"
+	elemental "github.com/elcengine/elemental/core"
+	fq "github.com/elcengine/elemental/plugins/filterquery"
 	mock "github.com/stretchr/testify/mock"
 )
 

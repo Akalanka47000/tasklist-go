@@ -12,7 +12,121 @@
     "host": "localhost:8080",
     "basePath": "/api",
     "paths": {
-        "/users": {
+        "/v1/auth/current": {
+            "get": {
+                "description": "Get the currently authenticated user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth V1"
+                ],
+                "summary": "Get current user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/global.Response-models_User"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/login": {
+            "post": {
+                "description": "Authenticate user and return a pair of tokens as cookies",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth V1"
+                ],
+                "summary": "Login",
+                "parameters": [
+                    {
+                        "description": "Login credentials",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/global.Response-dto_LoginResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/logout": {
+            "post": {
+                "description": "Logout the current user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth V1"
+                ],
+                "summary": "Logout",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/global.Response-any"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/register": {
+            "post": {
+                "description": "Register a new user and return a pair of tokens as cookies",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth V1"
+                ],
+                "summary": "Register",
+                "parameters": [
+                    {
+                        "description": "Registration data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.RegisterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/global.Response-dto_RegisterResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/users": {
             "get": {
                 "description": "Get a list of all users",
                 "consumes": [
@@ -22,7 +136,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "Users V1"
                 ],
                 "summary": "Get all users",
                 "parameters": [
@@ -57,7 +171,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "Users V1"
                 ],
                 "summary": "Create a new user",
                 "parameters": [
@@ -81,7 +195,7 @@
                 }
             }
         },
-        "/users/{id}": {
+        "/v1/users/{id}": {
             "get": {
                 "description": "Get a user by their ID",
                 "consumes": [
@@ -91,7 +205,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "Users V1"
                 ],
                 "summary": "Get user by ID",
                 "parameters": [
@@ -121,7 +235,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "Users V1"
                 ],
                 "summary": "Delete user by ID",
                 "parameters": [
@@ -151,7 +265,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "Users V1"
                 ],
                 "summary": "Update user by ID",
                 "parameters": [
@@ -252,6 +366,86 @@
         "dto.GetUsersReponse": {
             "type": "object"
         },
+        "dto.LoginRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.RegisterRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.RegisterResponse": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.UpdateUserRequest": {
             "type": "object",
             "required": [
@@ -314,6 +508,65 @@
                 },
                 "error": {},
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "global.Response-dto_LoginResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.LoginResponse"
+                },
+                "error": {},
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "global.Response-dto_RegisterResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.RegisterResponse"
+                },
+                "error": {},
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "global.Response-models_User": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/models.User"
+                },
+                "error": {},
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.User": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "updated_at": {
                     "type": "string"
                 }
             }

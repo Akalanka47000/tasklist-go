@@ -1,4 +1,4 @@
-// Custom utility functions for generating and validating JWT tokens.
+// Package jwtx provides custom utility functions for generating and validating JWT tokens.
 package jwtx
 
 import (
@@ -32,18 +32,22 @@ func MustGenerateUserToken(user User, refresh bool) string {
 
 // ValidateUserToken validates a given JWT token and parses the user information from it.
 func ValidateUserToken(token string) (*User, error) {
+	invalidTokenErr := fiber.NewError(fiber.StatusUnauthorized, "Invalid token")
 	parsedToken, err := jwt.Parse(token, func(token *jwt.Token) (any, error) {
 		return []byte(config.Env.JWTSecret), nil
 	})
 	if err != nil || !parsedToken.Valid {
-		return nil, fiber.NewError(fiber.StatusUnauthorized, "Invalid token")
+		return nil, invalidTokenErr
 	}
 	claims, ok := parsedToken.Claims.(jwt.MapClaims)
 	if !ok {
-		return nil, fiber.NewError(fiber.StatusUnauthorized, "Invalid token")
+		return nil, invalidTokenErr
 	}
 	user := User{}
-	jsonString, _ := json.Marshal(claims["data"])
+	jsonString, err := json.Marshal(claims["data"])
+	if err != nil {
+		return nil, invalidTokenErr
+	}
 	json.Unmarshal(jsonString, &user)
 	return &user, nil
 }

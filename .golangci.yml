@@ -8,11 +8,13 @@ linters:
     - dogsled
     - errcheck
     - errorlint
+    - errname
     - exhaustruct
     - funlen
     - gochecknoglobals
     - gocyclo
     - gocognit
+    - godot
     - gosec
     - gomoddirectives
     - ireturn
@@ -28,3 +30,17 @@ linters:
     - varnamelen
     - wrapcheck
     - wsl
+  
+  settings:
+    lll:
+      line-length: 180
+    predeclared:
+      ignore:
+        - new
+    staticcheck:
+      checks:
+        - all
+        - "-ST1000" # https://staticcheck.dev/docs/checks/#ST1000
+        - "-ST1001" # https://staticcheck.dev/docs/checks/#ST1001
+        - "-ST1020" # https://staticcheck.dev/docs/checks/#ST1020
+        - "-ST1022" # https://staticcheck.dev/docs/checks/#ST1022

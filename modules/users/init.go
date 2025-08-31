@@ -34,7 +34,7 @@ func new(params Params) *Router {
 	}
 }
 
-// Registers versioned routes for the entire user module
+// ConfigureRoutes registers versioned routes for the entire user module
 func (r *Router) ConfigureRoutes(app *fiber.App) {
 	app.All("/*", middleware.Internal)
 

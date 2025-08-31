@@ -9,7 +9,7 @@ import (
 type CreateUserRequest struct {
 	Name     string `json:"name" validate:"required" messages:"Please provide a name for the user"`
 	Email    string `json:"email" validate:"required,email" messages:"Please provide a valid email address"`
-	Password string `json:"password" validate:"required,password" messages:"Password should have at least one lowercase letter, one uppercase letter, one number and one special character and should be at least 8 characters long"`
+	Password string `json:"password" validate:"required,password" messages:"Password should have at least one lowercase letter, one uppercase letter, one number and one special character and should be at least 8 characters long"` //nolint:lll
 }
 
 type CreateUserResponse = User
@@ -26,7 +26,7 @@ type UpdateUserRequest struct {
 	GetUserRequest
 	Name     *string `json:"name"`
 	Email    *string `json:"email" validate:"omitempty,email" messages:"Please provide a valid email address"`
-	Password *string `json:"password" validate:"omitempty,password" messages:"Password should have at least one lowercase letter, one uppercase letter, one number and one special character and should be at least 8 characters long"`
+	Password *string `json:"password" validate:"omitempty,password" messages:"Password should have at least one lowercase letter, one uppercase letter, one number and one special character and should be at least 8 characters long"` //nolint:lll
 }
 
 type DeleteUserRequest = GetUserRequest

@@ -10,6 +10,7 @@ import (
 	fq "github.com/elcengine/elemental/plugins/filterquery"
 	fqm "github.com/elcengine/elemental/plugins/filterquery/middleware"
 	"github.com/gofiber/fiber/v2"
+	"github.com/samber/lo"
 )
 
 type Controller struct {
@@ -53,7 +54,7 @@ func (ctrl *Controller) CreateUser(c *fiber.Ctx) error {
 // @Success		200		{object}	global.Response[dto.GetUsersReponse]
 // @Router			/v1/users [get]
 func (ctrl *Controller) GetUsers(c *fiber.Ctx) error {
-	result := ctrl.service.GetUsers(c.Context(), c.Locals(fqm.CtxKey).(fq.Result))
+	result := ctrl.service.GetUsers(c.Context(), lo.Cast[fq.Result](c.Locals(fqm.CtxKey)))
 	return c.JSON(global.Response[dto.GetUsersReponse]{
 		Data:    &result,
 		Message: "Users fetched successfully!",

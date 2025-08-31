@@ -33,7 +33,7 @@ func new(params Params) *Router {
 	}
 }
 
-// Registers versioned routes for the entire auth module
+// ConfigureRoutes registers versioned routes for the entire auth module
 func (r *Router) ConfigureRoutes(app *fiber.App) {
 	app.Mount(versioned(1), r.V1)
 }

@@ -9,7 +9,7 @@ import (
 	"tasklist/utils/hash"
 )
 
-func Up_1756621873829(ctx context.Context, _ *mongo.Database, _ *mongo.Client) {
+func Up_1756621873829(ctx context.Context, _ *mongo.Database, _ *mongo.Client) { //nolint:staticcheck // ST1003
 	UserModel.Create(User{
 		Name:     lo.ToPtr("Akalanka Perera"),
 		Email:    lo.ToPtr("akalanka@tasklist.io"),
@@ -17,6 +17,6 @@ func Up_1756621873829(ctx context.Context, _ *mongo.Database, _ *mongo.Client) {
 	}).Exec(ctx)
 }
 
-func Down_1756621873829(ctx context.Context, _ *mongo.Database, _ *mongo.Client) {
+func Down_1756621873829(ctx context.Context, _ *mongo.Database, _ *mongo.Client) { //nolint:staticcheck // ST1003
 	UserModel.DeleteOne(primitive.M{"email": "akalanka@tasklist.io"}).Exec(ctx)
 }

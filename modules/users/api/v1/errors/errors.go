@@ -1,4 +1,4 @@
-package errors
+package httperrs
 
 import "github.com/gofiber/fiber/v2"
 

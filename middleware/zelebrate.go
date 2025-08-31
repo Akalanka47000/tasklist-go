@@ -67,7 +67,7 @@ func Zelebrate[T any](segments ...ZelebrateSegment) func(*fiber.Ctx) error {
 
 // ZelebrateRequest extracts the validated struct of type T from the context
 func ZelebrateRequest[T any](ctx *fiber.Ctx) *T {
-	return ctx.Locals(ctxZelebrateRequest).(*T)
+	return lo.Cast[*T](ctx.Locals(ctxZelebrateRequest))
 }
 
 // Parses the specified segments of the request into a struct of type T
@@ -87,7 +87,7 @@ func parseRequest[T any](ctx *fiber.Ctx, segments ...ZelebrateSegment) (*T, erro
 			headers := ctx.GetReqHeaders()
 			targetRef := reflect.ValueOf(target).Elem()
 			targetType := targetRef.Type()
-			for i := 0; i < targetRef.NumField(); i++ {
+			for i := range targetRef.NumField() {
 				field := targetType.Field(i)
 				if headerName, ok := field.Tag.Lookup("json"); ok {
 					if headerValue, exists := headers[lo.Capitalize(strings.ReplaceAll(headerName, ",omitempty", ""))]; exists {

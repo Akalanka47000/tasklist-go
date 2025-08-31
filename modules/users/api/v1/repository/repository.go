@@ -39,9 +39,9 @@ func (r *repository) GetUserByID(ctx context.Context, id string, plain ...bool) 
 }
 
 func (r *repository) UpdateUserByID(ctx context.Context, id string, user User) User {
-	return UserModel.FindByIDAndUpdate(id, user).New().OrFail(errors.UserNotFound).ExecT(ctx)
+	return UserModel.FindByIDAndUpdate(id, user).New().OrFail(httperrs.UserNotFound).ExecT(ctx)
 }
 
 func (r *repository) DeleteUserByID(ctx context.Context, id string) User {
-	return UserModel.FindByIDAndDelete(id).OrFail(errors.UserNotFound).ExecT(ctx)
+	return UserModel.FindByIDAndDelete(id).OrFail(httperrs.UserNotFound).ExecT(ctx)
 }

@@ -9,6 +9,7 @@ import (
 	. "tasklist/modules/users/api/v1/models"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/samber/lo"
 )
 
 type Controller struct {
@@ -65,7 +66,7 @@ func (ctrl *Controller) Register(c *fiber.Ctx) error {
 // @Success		200	{object}	global.Response[User]
 // @Router			/v1/auth/current [get]
 func (ctrl *Controller) CurrentUser(c *fiber.Ctx) error {
-	user := c.Locals(global.CtxUser).(*User)
+	user := lo.Cast[*User](c.Locals(global.CtxUser))
 	return c.JSON(global.Response[User]{
 		Data:    user,
 		Message: "Auth user fetched successfully!",

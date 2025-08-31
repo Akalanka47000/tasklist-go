@@ -34,7 +34,7 @@ func New(params Params) *fiber.App {
 	}))
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     config.Env.FrontendBaseUrl,
+		AllowOrigins:     config.Env.FrontendBaseURL,
 		AllowCredentials: true,
 	}))
 

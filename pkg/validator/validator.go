@@ -22,7 +22,7 @@ var Init = fx.Provide(New) // Provide a validator instance to the fx container
 func New() *v.Validate {
 	validator := v.New()
 	lo.Must0(validator.RegisterValidation("password", password))
-	lo.Must0(validator.RegisterValidation("objectid", objectId))
+	lo.Must0(validator.RegisterValidation("objectid", objectID))
 	return validator
 }
 
@@ -54,7 +54,7 @@ func password(fl v.FieldLevel) bool {
 	return hasUpper && hasLower && hasDigit && hasSpecial
 }
 
-func objectId(fl v.FieldLevel) bool {
+func objectID(fl v.FieldLevel) bool {
 	field := fl.Field().String()
 	if field == "" {
 		return true
@@ -65,7 +65,7 @@ func objectId(fl v.FieldLevel) bool {
 	}
 
 	for _, ch := range field {
-		if !((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F')) {
+		if (ch < '0' || ch > '9') && (ch < 'a' || ch > 'f') && (ch < 'A' || ch > 'F') {
 			return false
 		}
 	}

@@ -15,7 +15,7 @@ import (
 type Config struct {
 	Port              int    `mapstructure:"PORT"`
 	Host              string `mapstructure:"HOST"`
-	FrontendBaseUrl   string `mapstructure:"FRONTEND_BASE_URL" validate:"url"`
+	FrontendBaseURL   string `mapstructure:"FRONTEND_BASE_URL" validate:"url"`
 	DatabaseURL       string `mapstructure:"DB_URL" validate:"required,mongodb_connection_string"`
 	ServiceRequestKey string `mapstructure:"SERVICE_REQUEST_KEY" validate:"required"` // Key to protect internal routes
 	JWTSecret         string `mapstructure:"JWT_SECRET" validate:"required"`

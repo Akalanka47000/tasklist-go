@@ -117,12 +117,12 @@ func (_c *MockService_Login_Call) RunAndReturn(run func(ctx context.Context, ema
 	return _c
 }
 
-// RegisterUser provides a mock function for the type MockService
-func (_mock *MockService) RegisterUser(ctx context.Context, payload dto.RegisterRequest) (models.User, string, string) {
+// Register provides a mock function for the type MockService
+func (_mock *MockService) Register(ctx context.Context, payload dto.RegisterRequest) (models.User, string, string) {
 	ret := _mock.Called(ctx, payload)
 
 	if len(ret) == 0 {
-		panic("no return value specified for RegisterUser")
+		panic("no return value specified for Register")
 	}
 
 	var r0 models.User
@@ -149,19 +149,19 @@ func (_mock *MockService) RegisterUser(ctx context.Context, payload dto.Register
 	return r0, r1, r2
 }
 
-// MockService_RegisterUser_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'RegisterUser'
-type MockService_RegisterUser_Call struct {
+// MockService_Register_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Register'
+type MockService_Register_Call struct {
 	*mock.Call
 }
 
-// RegisterUser is a helper method to define mock.On call
+// Register is a helper method to define mock.On call
 //   - ctx context.Context
 //   - payload dto.RegisterRequest
-func (_e *MockService_Expecter) RegisterUser(ctx interface{}, payload interface{}) *MockService_RegisterUser_Call {
-	return &MockService_RegisterUser_Call{Call: _e.mock.On("RegisterUser", ctx, payload)}
+func (_e *MockService_Expecter) Register(ctx interface{}, payload interface{}) *MockService_Register_Call {
+	return &MockService_Register_Call{Call: _e.mock.On("Register", ctx, payload)}
 }
 
-func (_c *MockService_RegisterUser_Call) Run(run func(ctx context.Context, payload dto.RegisterRequest)) *MockService_RegisterUser_Call {
+func (_c *MockService_Register_Call) Run(run func(ctx context.Context, payload dto.RegisterRequest)) *MockService_Register_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -179,12 +179,12 @@ func (_c *MockService_RegisterUser_Call) Run(run func(ctx context.Context, paylo
 	return _c
 }
 
-func (_c *MockService_RegisterUser_Call) Return(user models.User, s string, s1 string) *MockService_RegisterUser_Call {
+func (_c *MockService_Register_Call) Return(user models.User, s string, s1 string) *MockService_Register_Call {
 	_c.Call.Return(user, s, s1)
 	return _c
 }
 
-func (_c *MockService_RegisterUser_Call) RunAndReturn(run func(ctx context.Context, payload dto.RegisterRequest) (models.User, string, string)) *MockService_RegisterUser_Call {
+func (_c *MockService_Register_Call) RunAndReturn(run func(ctx context.Context, payload dto.RegisterRequest) (models.User, string, string)) *MockService_Register_Call {
 	_c.Call.Return(run)
 	return _c
 }

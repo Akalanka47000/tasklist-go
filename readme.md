@@ -6,13 +6,10 @@ Go service for Task List
 
 ## Prerequisites
 
- - [Air](https://github.com/cosmtrek/air) - For live reloading
- - [Node](https://nodejs.org/en/) - For setting up git hooks (optional)
+ - [Node](https://nodejs.org/en/) - For using commitlint (optional)
 
 ## Getting started
 
 - Run `go mod download` to download all dependencies
 - Run `go run .` to start the development server without live reloading
-- Run `air` to start the development server with hot reloading
-
-- Optionally, run `bun install` (or the package manager of your choice) to setup git hooks
+- Run `make dev` to start the development server with hot reloading

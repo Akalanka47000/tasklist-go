@@ -250,48 +250,7 @@
             }
         },
         "dto.GetUsersReponse": {
-            "type": "object",
-            "properties": {
-                "docs": {
-                    "description": "The documents returned by the query",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.User"
-                    }
-                },
-                "hasNext": {
-                    "description": "Whether there is a next page or not",
-                    "type": "boolean"
-                },
-                "hasPrev": {
-                    "description": "Whether there is a previous page or not",
-                    "type": "boolean"
-                },
-                "limit": {
-                    "description": "The number of documents per page",
-                    "type": "integer"
-                },
-                "nextPage": {
-                    "description": "The next page number if there is one",
-                    "type": "integer"
-                },
-                "page": {
-                    "description": "The current page number",
-                    "type": "integer"
-                },
-                "prevPage": {
-                    "description": "The previous page number if there is one",
-                    "type": "integer"
-                },
-                "totalDocs": {
-                    "description": "The total number of documents which match the query before pagination",
-                    "type": "integer"
-                },
-                "totalPages": {
-                    "description": "The total number of pages which match the query",
-                    "type": "integer"
-                }
-            }
+            "type": "object"
         },
         "dto.UpdateUserRequest": {
             "type": "object",
@@ -355,29 +314,6 @@
                 },
                 "error": {},
                 "message": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.User": {
-            "type": "object",
-            "properties": {
-                "_id": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "updated_at": {
                     "type": "string"
                 }
             }

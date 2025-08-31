@@ -5,7 +5,7 @@ build:
 start:
 	./bin/tasklist
 dev:
-	air
+	go tool -modfile=go.tool.mod air
 format:
 	gofmt -w .
 test:
@@ -24,25 +24,21 @@ lint:
 lint-fix:
 	golangci-lint run --fix ./...
 install:
-	go install github.com/air-verse/air@v1.61.7
-	@echo "\033[0;32mAir installed successfully. You can now run 'make dev' to start the development server.\033[0m"
-	go install github.com/evilmartians/lefthook@v1.11.12
-	lefthook install
-	@echo "\033[0;32mLefthook installed and configured successfully.\033[0m"
+	go mod tidy
+	@echo "\033[0;32mGo modules installed successfully.\033[0m"
+	mkdir -p tools && mv ./go.tool.mod ./tools/go.mod && cd ./tools && go mod tidy && cd .. && mv ./tools/go.mod ./go.tool.mod && mv ./tools/go.sum ./go.tool.sum && rm -rf ./tools
+	@echo "\033[0;32mGo tools installed successfully.\033[0m"
+	go tool -modfile=go.tool.mod lefthook install
+	@echo "\033[0;32mLefthook configured successfully.\033[0m"
 	@which npm > /dev/null && \
 		npm install -g @commitlint/config-conventional@17.6.5 @commitlint/cli@17.6.5 && \
 		echo "\033[0;32mCommitlint installed successfully.\033[0m" || \
 		echo "\033[0;31mNode is not installed. Please install Node.js to use commitlint.\033[0m"
-	go install github.com/vektra/mockery/v3@latest
-	@echo "\033[0;32mMockery installed successfully. You can now run 'make mocks' to generate mocks.\033[0m"
-	go mod tidy
-	@echo "\033[0;32mGo modules installed successfully.\033[0m"
 sandbox:
 	docker compose -f ./infrastructure/docker-compose.yml up
 teardown:
 	docker compose -f ./infrastructure/docker-compose.yml down
 mocks:
-	@command -v mockery >/dev/null 2>&1 || { echo >&2 "mockery not installed. Please install it with 'go install github.com/vektra/mockery/v3@latest'"; exit 1; }
-	mockery --config ./tests/mocks/mockery.yml
+	go tool -modfile=go.tool.mod mockery --config ./tests/mocks/mockery.yml
 swagger:
-	swag init -g main.go -o ./docs --parseDependency --parseInternal --outputTypes json
+	go tool -modfile=go.tool.mod swag init -g main.go -o ./docs --outputTypes json

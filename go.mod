@@ -13,6 +13,7 @@ require (
 	github.com/gofiber/contrib/swagger v1.3.0
 	github.com/gofiber/fiber/v2 v2.52.6
 	github.com/golang-jwt/jwt/v5 v5.0.0
+	github.com/jaswdr/faker/v2 v2.8.0
 	github.com/samber/lo v1.50.0
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/spf13/viper v1.17.0

@@ -1,6 +1,9 @@
 package config
 
 import (
+	"flag"
+	"os"
+
 	"github.com/akalanka47000/go-modkit/enums"
 )
 
@@ -18,4 +21,10 @@ func IsProduction() bool {
 // IsLocal returns true if the application is running in a local environment (not staging or production).
 func IsLocal() bool {
 	return Env.DeploymentEnv != DeploymentEnv.Production && Env.DeploymentEnv != DeploymentEnv.Staging
+}
+
+// IsTest returns true if the application is running in a test environment.
+func IsTest() bool {
+	return flag.Lookup("test.v") != nil ||
+		os.Getenv("GO_TEST") == "1"
 }

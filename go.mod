@@ -5,6 +5,7 @@ go 1.24
 toolchain go1.24.2
 
 require (
+	dario.cat/mergo v1.0.2
 	github.com/akalanka47000/go-modkit/enums v1.0.1
 	github.com/akalanka47000/go-modkit/routing v1.0.1
 	github.com/elcengine/elemental v1.19.2

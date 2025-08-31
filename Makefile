@@ -1,4 +1,5 @@
 GO_TEST_ARGS ?= -v --count=1
+COVERAGEDIR = coverage
 
 build:
 	go build -o ./bin/tasklist .
@@ -11,12 +12,16 @@ fmt:
 test:
 	PARALLEL_CONVEY=false make test-lightspeed
 test-lightspeed:
-	go test $(GO_TEST_ARGS) --run='${run}' -v --count=1 ./tests/...
+	go test $(GO_TEST_ARGS) --run='${run}' -v --count=1 ./...
 test-coverage:
-	@mkdir -p ./coverage
-	make test GO_TEST_ARGS="--cover -coverpkg=./cmd/...,./core/...,./plugins/...,./utils/... --coverprofile=./coverage/coverage.out"
-	go tool cover -html=./coverage/coverage.out -o ./coverage/index.html
-	@echo "\033[0;32mCoverage report generated at ./coverage/index.html.\033[0m"
+	@mkdir -p $(COVERAGEDIR)
+	make test GO_TEST_ARGS="--cover -coverpkg=./app/...,./config/...,./global/...,./middleware/...,./modules/...,./pkg/...,./utils/... --coverprofile=$(COVERAGEDIR)/coverage.out.tmp"
+	cat $(COVERAGEDIR)/coverage.out.tmp | grep -v "**/*_mock" > $(COVERAGEDIR)/coverage.out
+	rm -f $(COVERAGEDIR)/coverage.out.tmp
+	go tool cover -html=$(COVERAGEDIR)/coverage.out -o $(COVERAGEDIR)/index.html
+	@echo "\033[0;32mCoverage report generated at $(COVERAGEDIR)/index.html.\033[0m"
+test-ui:
+	go tool -modfile=go.tool.mod goconvey -port=8081 -excludedDirs="bin,coverage,database,docs,tests" ./...
 benchmark:
 	go test -bench=. $(GO_BENCH_ARGS) -benchmem -tags=benchmark ./tests/benchmarks/... 
 lint:

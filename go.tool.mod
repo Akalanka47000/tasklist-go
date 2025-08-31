@@ -5,6 +5,7 @@ go 1.24
 tool (
 	github.com/air-verse/air
 	github.com/evilmartians/lefthook
+	github.com/smartystreets/goconvey
 	github.com/swaggo/swag/cmd/swag
 	github.com/vektra/mockery/v3
 )
@@ -78,6 +79,7 @@ require (
 	github.com/rs/zerolog v1.33.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/schollz/progressbar/v3 v3.18.0 // indirect
+	github.com/smartystreets/goconvey v1.8.1 // indirect
 	github.com/spf13/afero v1.14.0 // indirect
 	github.com/spf13/cast v1.8.0 // indirect
 	github.com/spf13/cobra v1.9.1 // indirect

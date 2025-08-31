@@ -69,7 +69,7 @@ func New(params Params) *fiber.App {
 		},
 	}))
 
-	if config.IsLocal() {
+	if config.IsLocal() && !config.IsTest() {
 		app.Use(swagger.New(swagger.Config{
 			Path:     "/docs",
 			FilePath: "./docs/swagger.json",

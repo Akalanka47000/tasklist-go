@@ -1,4 +1,4 @@
-module tasklist-tools
+module tasklist
 
 go 1.24
 

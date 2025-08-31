@@ -7,7 +7,7 @@ toolchain go1.24.2
 require (
 	github.com/akalanka47000/go-modkit/enums v1.0.1
 	github.com/akalanka47000/go-modkit/routing v1.0.1
-	github.com/elcengine/elemental v1.19.1
+	github.com/elcengine/elemental v1.19.2
 	github.com/go-playground/validator/v10 v10.26.0
 	github.com/gofiber/contrib/fiberzap/v2 v2.1.6
 	github.com/gofiber/contrib/swagger v1.3.0

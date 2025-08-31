@@ -10,6 +10,15 @@ Go service for Task List
 
 ## Getting started
 
-- Run `go mod download` to download all dependencies
-- Run `go run .` to start the development server without live reloading
+- Run `make install` to setup the project with all necessary dependencies
 - Run `make dev` to start the development server with hot reloading
+
+---
+
+- **For a full list of available commands, please refer the [Makefile](./Makefile)**
+
+---
+
+## Migrations and Seeding
+
+- Migrations and seeding are handled using [Elemental](https://elcengine.github.io). Please refer to its CLI documentation for more details which you can find [here](https://elcengine.github.io/docs/cli)

@@ -13,7 +13,6 @@ import (
 	"github.com/samber/lo"
 )
 
-// service implements the Service interface
 type service struct {
 	repo repository.Repository
 }

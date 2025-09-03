@@ -13,7 +13,6 @@ import (
 	"github.com/samber/lo"
 )
 
-// service implements the Service interface for authentication logic.
 type service struct {
 	userService users.Service
 }

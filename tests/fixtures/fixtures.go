@@ -11,7 +11,7 @@ import (
 
 func MustLoadFile(filePath string) io.ReadCloser {
 	_, b, _, _ := runtime.Caller(0)
-	f, err := os.Open(filepath.Join(b, "../", filePath)) // nolint:gosec
+	f, err := os.Open(filepath.Join(b, "../", filePath)) //nolint:gosec
 	if err != nil {
 		panic(err)
 	}

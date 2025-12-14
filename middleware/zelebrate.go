@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"tasklist/pkg/masker"
 	"tasklist/pkg/validator"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/samber/lo"
 )
 
@@ -102,5 +104,8 @@ func parseRequest[T any](ctx *fiber.Ctx, segments ...ZelebrateSegment) (*T, erro
 			return nil, fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 	}
+
+	log.Infow("Request parsed", "request", lo.CastJSON[map[string]any](masker.MustMask(target)))
+
 	return target, nil
 }

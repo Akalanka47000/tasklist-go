@@ -5,11 +5,11 @@ import (
 
 	"tasklist/tests/mocks"
 
-	//fq "github.com/elcengine/elemental/plugins/filterquery"
+	// fq "github.com/elcengine/elemental/plugins/filterquery"
 	elemental "github.com/elcengine/elemental/core"
 	. "github.com/smartystreets/goconvey/convey"
 
-	//	"go.mongodb.org/mongo-driver/bson"
+	// "go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/integration/mtest"
 )
@@ -23,9 +23,9 @@ func TestUserRepository(t *testing.T) {
 	Convey("CreateUser", t, func() {
 		mt.Run("CreateUser", func(mt *mtest.T) {
 			firstBatch := bson.D{
-				{"_id", bson.D{{"ts", 1}}},
-				{"operationType", "insert"},
-				{"fullDocument", bson.D{{"name", "Alice"}}},
+				{Key: "_id", Value: bson.D{{Key: "ts", Value: 1}}},
+				{Key: "operationType", Value: "insert"},
+				{Key: "fullDocument", Value: bson.D{{Key: "name", Value: "Alice"}}},
 			}
 
 			mt.AddMockResponses(

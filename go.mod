@@ -8,7 +8,7 @@ require (
 	dario.cat/mergo v1.0.2
 	github.com/akalanka47000/go-modkit/enums v1.0.1
 	github.com/akalanka47000/go-modkit/routing v1.0.1
-	github.com/elcengine/elemental v1.19.2
+	github.com/elcengine/elemental v1.19.4
 	github.com/go-playground/validator/v10 v10.26.0
 	github.com/gofiber/contrib/fiberzap/v2 v2.1.6
 	github.com/gofiber/contrib/swagger v1.3.0
@@ -16,6 +16,7 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/jaswdr/faker/v2 v2.8.0
 	github.com/samber/lo v1.50.0
+	github.com/showa-93/go-mask v0.6.2
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/spf13/viper v1.17.0
 	github.com/stretchr/testify v1.10.0

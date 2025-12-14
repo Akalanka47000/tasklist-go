@@ -18,8 +18,9 @@ var ZapWhitelists = []string{
 	"/system/readiness",
 }
 
-// getCustomLogFields extracts custom fields from the request context for logging purposes.
-func getCustomLogFields(c *fiber.Ctx) []any {
+// getLogFields extracts custom fields from the request context to include in the http request logs.
+// These fields will not be visible in normal log entries happening during the request lifecycle.
+func getLogFields(c *fiber.Ctx) []any {
 	headers := c.GetReqHeaders()
 	fields := []any{
 		"ip", c.IP(),
@@ -37,26 +38,11 @@ func getCustomLogFields(c *fiber.Ctx) []any {
 }
 
 // getZapLogFields converts custom log fields into zap.Field format for structured logging.
+// These fields will be included in every log entry made during the request lifecycle.
 func getZapLogFields(c *fiber.Ctx) []zap.Field {
-	fields := []zap.Field{
+	return []zap.Field{
 		zap.String(global.CtxCorrelationID, lo.Cast[string](c.Locals(global.CtxCorrelationID))),
 	}
-	customFields := getCustomLogFields(c)
-	for i := 0; i < len(customFields); i += 2 {
-		key := lo.Cast[string](customFields[i])
-		fields = append(fields, zap.Any(key, customFields[i+1]))
-	}
-	return fields
-}
-
-// getLogFields prepares log fields in a key-value format for non-zap loggers.
-func getLogFields(c *fiber.Ctx) []any {
-	fields := getCustomLogFields(c)
-	payload := string(c.Body())
-	if len(payload) > 0 {
-		fields = append(fields, "payload", payload)
-	}
-	return fields
 }
 
 // Zapped is a middleware that overrides the default logger with zapcore and sets up an http request logger.
@@ -82,7 +68,13 @@ func Zapped(c *fiber.Ctx) error {
 	return fiberzap.New(fiberzap.Config{
 		Logger: logger,
 		FieldsFunc: func(c *fiber.Ctx) []zap.Field {
-			return getZapLogFields(c)
+			fields := getZapLogFields(c)
+			customFields := getLogFields(c)
+			for i := 0; i < len(customFields); i += 2 {
+				key := lo.Cast[string](customFields[i])
+				fields = append(fields, zap.Any(key, customFields[i+1]))
+			}
+			return fields
 		},
 		Fields:   []string{"latency"},
 		Messages: []string{"Server error", "Client error", "Request completed"},

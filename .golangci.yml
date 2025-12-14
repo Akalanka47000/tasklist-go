@@ -12,6 +12,7 @@ linters:
     - exhaustruct
     - funlen
     - gochecknoglobals
+    - gochecknoinits
     - gocyclo
     - gocognit
     - godot
@@ -23,17 +24,19 @@ linters:
     - nlreturn
     - noctx
     - nonamedreturns
+    - paralleltest
     - perfsprint
     - revive
     - tagalign
     - tagliatelle
+    - testpackage
     - varnamelen
     - wrapcheck
     - wsl
   
   settings:
     lll:
-      line-length: 180
+      line-length: 240
     predeclared:
       ignore:
         - new

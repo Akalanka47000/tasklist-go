@@ -12,8 +12,8 @@ import (
 // Important: This middleware respects the Cache-Control header.
 // If the Cache-Control header is set to no-cache, the cache will not be used.
 var CacheSuccess = cache.New(cache.Config{
-	KeyGenerator: func(c *fiber.Ctx) string {
-		return c.OriginalURL()
+	KeyGenerator: func(ctx *fiber.Ctx) string {
+		return ctx.OriginalURL()
 	},
 	Expiration: time.Minute * 30,
 })

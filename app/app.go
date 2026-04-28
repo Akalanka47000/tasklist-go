@@ -47,8 +47,8 @@ func New(params Params) *fiber.App {
 
 	app.Use(limiter.New(limiter.Config{
 		Max: 100,
-		LimitReached: func(c *fiber.Ctx) error {
-			return c.Status(fiber.StatusTooManyRequests).JSON(global.Response[*interface{}]{
+		LimitReached: func(ctx *fiber.Ctx) error {
+			return ctx.Status(fiber.StatusTooManyRequests).JSON(global.Response[*interface{}]{
 				Message: "Too many requests, please try again later",
 			})
 		},

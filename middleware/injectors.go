@@ -9,9 +9,9 @@ import (
 )
 
 // Intercepts the response and populates it with additional fields.
-func responseHeaderInjector(c *fiber.Ctx) error {
-	c.Append(global.HdrXHostname, lo.Ok(os.Hostname())) // Useful for debugging
-	return c.Next()
+func responseHeaderInjector(ctx *fiber.Ctx) error {
+	ctx.Append(global.HdrXHostname, lo.Ok(os.Hostname())) // Useful for debugging
+	return ctx.Next()
 }
 
 var Injectors = []any{responseHeaderInjector}

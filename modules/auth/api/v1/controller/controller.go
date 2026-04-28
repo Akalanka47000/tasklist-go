@@ -30,11 +30,11 @@ func new(params Params) *Controller {
 // @Param			data	body		dto.LoginRequest	true	"Login credentials"
 // @Success		200		{object}	global.Response[dto.LoginResponse]
 // @Router			/v1/auth/login [post]
-func (ctrl *Controller) Login(c *fiber.Ctx) error {
-	req := middleware.ZelebrateRequest[dto.LoginRequest](c)
-	user, accessToken, refreshToken := ctrl.service.Login(c.Context(), req.Email, req.Password)
-	session.SetCookieCredentials(c, accessToken, refreshToken)
-	return c.JSON(global.Response[dto.LoginResponse]{
+func (c *Controller) Login(ctx *fiber.Ctx) error {
+	req := middleware.ZelebrateRequest[dto.LoginRequest](ctx)
+	user, accessToken, refreshToken := c.service.Login(ctx.Context(), req.Email, req.Password)
+	session.SetCookieCredentials(ctx, accessToken, refreshToken)
+	return ctx.JSON(global.Response[dto.LoginResponse]{
 		Data:    &user,
 		Message: "Login successful!",
 	})
@@ -48,11 +48,11 @@ func (ctrl *Controller) Login(c *fiber.Ctx) error {
 // @Param			data	body		dto.RegisterRequest	true	"Registration data"
 // @Success		201		{object}	global.Response[dto.RegisterResponse]
 // @Router			/v1/auth/register [post]
-func (ctrl *Controller) Register(c *fiber.Ctx) error {
-	req := middleware.ZelebrateRequest[dto.RegisterRequest](c)
-	user, accessToken, refreshToken := ctrl.service.Register(c.Context(), *req)
-	session.SetCookieCredentials(c, accessToken, refreshToken)
-	return c.Status(fiber.StatusCreated).JSON(global.Response[dto.RegisterResponse]{
+func (c *Controller) Register(ctx *fiber.Ctx) error {
+	req := middleware.ZelebrateRequest[dto.RegisterRequest](ctx)
+	user, accessToken, refreshToken := c.service.Register(ctx.Context(), *req)
+	session.SetCookieCredentials(ctx, accessToken, refreshToken)
+	return ctx.Status(fiber.StatusCreated).JSON(global.Response[dto.RegisterResponse]{
 		Data:    &user,
 		Message: "Registration successful!",
 	})
@@ -65,9 +65,9 @@ func (ctrl *Controller) Register(c *fiber.Ctx) error {
 // @Produce		json
 // @Success		200	{object}	global.Response[User]
 // @Router			/v1/auth/current [get]
-func (ctrl *Controller) CurrentUser(c *fiber.Ctx) error {
-	user := lo.Cast[*User](c.Locals(global.CtxUser))
-	return c.JSON(global.Response[User]{
+func (c *Controller) CurrentUser(ctx *fiber.Ctx) error {
+	user := lo.Cast[*User](ctx.Locals(global.CtxUser))
+	return ctx.JSON(global.Response[User]{
 		Data:    user,
 		Message: "Auth user fetched successfully!",
 	})
@@ -80,9 +80,9 @@ func (ctrl *Controller) CurrentUser(c *fiber.Ctx) error {
 // @Produce		json
 // @Success		200	{object}	global.Response[any]
 // @Router			/v1/auth/logout [post]
-func (ctrl *Controller) Logout(c *fiber.Ctx) error {
-	session.ClearCookieCredentials(c)
-	return c.Status(fiber.StatusOK).JSON(global.Response[any]{
+func (c *Controller) Logout(ctx *fiber.Ctx) error {
+	session.ClearCookieCredentials(ctx)
+	return ctx.Status(fiber.StatusOK).JSON(global.Response[any]{
 		Message: "Logout successful!",
 	})
 }

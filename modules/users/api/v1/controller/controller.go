@@ -31,14 +31,14 @@ func new(params Params) *Controller {
 // @Param			data	body		dto.CreateUserRequest	true	"User data"
 // @Success		201		{object}	global.Response[dto.CreateUserResponse]
 // @Router			/v1/users [post]
-func (ctrl *Controller) CreateUser(c *fiber.Ctx) error {
-	req := middleware.ZelebrateRequest[dto.CreateUserRequest](c)
-	result := ctrl.service.CreateUser(c.Context(), models.User{
+func (c *Controller) CreateUser(ctx *fiber.Ctx) error {
+	req := middleware.ZelebrateRequest[dto.CreateUserRequest](ctx)
+	result := c.service.CreateUser(ctx.Context(), models.User{
 		Email:    &req.Email,
 		Name:     &req.Name,
 		Password: &req.Password,
 	})
-	return c.Status(fiber.StatusCreated).JSON(global.Response[dto.CreateUserResponse]{
+	return ctx.Status(fiber.StatusCreated).JSON(global.Response[dto.CreateUserResponse]{
 		Data:    &result,
 		Message: "User created successfully",
 	})
@@ -53,9 +53,9 @@ func (ctrl *Controller) CreateUser(c *fiber.Ctx) error {
 // @Param			limit	query		int	false	"Page size"
 // @Success		200		{object}	global.Response[dto.GetUsersReponse]
 // @Router			/v1/users [get]
-func (ctrl *Controller) GetUsers(c *fiber.Ctx) error {
-	result := ctrl.service.GetUsers(c.Context(), lo.Cast[fq.Result](c.Locals(fqm.CtxKey)))
-	return c.JSON(global.Response[dto.GetUsersReponse]{
+func (c *Controller) GetUsers(ctx *fiber.Ctx) error {
+	result := c.service.GetUsers(ctx.Context(), lo.Cast[fq.Result](ctx.Locals(fqm.CtxKey)))
+	return ctx.JSON(global.Response[dto.GetUsersReponse]{
 		Data:    &result,
 		Message: "Users fetched successfully!",
 	})
@@ -69,10 +69,10 @@ func (ctrl *Controller) GetUsers(c *fiber.Ctx) error {
 // @Param			id	path		string	true	"User ID"
 // @Success		200	{object}	global.Response[dto.GetUserResponse]
 // @Router			/v1/users/{id} [get]
-func (ctrl *Controller) GetUserByID(c *fiber.Ctx) error {
-	req := middleware.ZelebrateRequest[dto.GetUserRequest](c)
-	result := ctrl.service.GetUserByID(c.Context(), req.ID)
-	return c.JSON(global.Response[dto.GetUserResponse]{
+func (c *Controller) GetUserByID(ctx *fiber.Ctx) error {
+	req := middleware.ZelebrateRequest[dto.GetUserRequest](ctx)
+	result := c.service.GetUserByID(ctx.Context(), req.ID)
+	return ctx.JSON(global.Response[dto.GetUserResponse]{
 		Data:    result,
 		Message: "User fetched successfully!",
 	})
@@ -87,14 +87,14 @@ func (ctrl *Controller) GetUserByID(c *fiber.Ctx) error {
 // @Param			data	body		dto.UpdateUserRequest	true	"User data"
 // @Success		200		{object}	global.Response[dto.GetUserResponse]
 // @Router			/v1/users/{id} [patch]
-func (ctrl *Controller) UpdateUserByID(c *fiber.Ctx) error {
-	req := middleware.ZelebrateRequest[dto.UpdateUserRequest](c)
-	result := ctrl.service.UpdateUserByID(c.Context(), req.ID, models.User{
+func (c *Controller) UpdateUserByID(ctx *fiber.Ctx) error {
+	req := middleware.ZelebrateRequest[dto.UpdateUserRequest](ctx)
+	result := c.service.UpdateUserByID(ctx.Context(), req.ID, models.User{
 		Email:    req.Email,
 		Name:     req.Name,
 		Password: req.Password,
 	})
-	return c.JSON(global.Response[dto.GetUserResponse]{
+	return ctx.JSON(global.Response[dto.GetUserResponse]{
 		Data:    &result,
 		Message: "User updated successfully!",
 	})
@@ -108,10 +108,10 @@ func (ctrl *Controller) UpdateUserByID(c *fiber.Ctx) error {
 // @Param			id	path		string	true	"User ID"
 // @Success		200	{object}	global.Response[any]
 // @Router			/v1/users/{id} [delete]
-func (ctrl *Controller) DeleteUserByID(c *fiber.Ctx) error {
-	req := middleware.ZelebrateRequest[dto.DeleteUserRequest](c)
-	ctrl.service.DeleteUserByID(c.Context(), c.Params(req.ID))
-	return c.Status(fiber.StatusOK).JSON(global.Response[any]{
+func (c *Controller) DeleteUserByID(ctx *fiber.Ctx) error {
+	req := middleware.ZelebrateRequest[dto.DeleteUserRequest](ctx)
+	c.service.DeleteUserByID(ctx.Context(), ctx.Params(req.ID))
+	return ctx.Status(fiber.StatusOK).JSON(global.Response[any]{
 		Data:    nil,
 		Message: "User deleted successfully!",
 	})

@@ -39,7 +39,7 @@ func (s *service) Register(ctx context.Context, payload dto.RegisterRequest) (mo
 	user := s.userService.CreateUser(ctx, models.User{
 		Name:     &payload.Name,
 		Email:    &payload.Email,
-		Password: lo.ToPtr(hash.MustString(payload.Password)),
+		Password: &payload.Password,
 	})
 	accessToken := jwtx.MustGenerateUserToken(user, false)
 	refreshToken := jwtx.MustGenerateUserToken(user, true)

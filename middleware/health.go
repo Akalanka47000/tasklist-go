@@ -26,7 +26,7 @@ type HealthCheckOptions struct {
 	}
 }
 
-func probeHandler(c *fiber.Ctx, checkFunctions map[string]func() bool) error {
+func probeHandler(ctx *fiber.Ctx, checkFunctions map[string]func() bool) error {
 	status := fiber.StatusOK
 	var wg sync.WaitGroup
 	results := make(map[string]bool)
@@ -43,7 +43,7 @@ func probeHandler(c *fiber.Ctx, checkFunctions map[string]func() bool) error {
 	}
 	wg.Wait()
 
-	return c.Status(status).JSON(results)
+	return ctx.Status(status).JSON(results)
 }
 
 func HealthCheck(opts HealthCheckOptions) fiber.Handler {
@@ -55,23 +55,23 @@ func HealthCheck(opts HealthCheckOptions) fiber.Handler {
 			"app": func() bool { return true },
 		}
 	}
-	return func(c *fiber.Ctx) error {
-		if c.Method() != fiber.MethodGet {
-			return c.Next()
+	return func(ctx *fiber.Ctx) error {
+		if ctx.Method() != fiber.MethodGet {
+			return ctx.Next()
 		}
 
-		prefixCount := len(utils.TrimRight(c.Route().Path, '/'))
+		prefixCount := len(utils.TrimRight(ctx.Route().Path, '/'))
 
 		if opts.AuthMiddleware != nil {
-			if err := (*opts.AuthMiddleware)(c); err != nil {
+			if err := (*opts.AuthMiddleware)(ctx); err != nil {
 				return err
 			}
 		}
 
-		if len(c.Path()) >= prefixCount {
-			checkPath := c.Path()[prefixCount:]
+		if len(ctx.Path()) >= prefixCount {
+			checkPath := ctx.Path()[prefixCount:]
 			checkPathTrimmed := checkPath
-			if !c.App().Config().StrictRouting {
+			if !ctx.App().Config().StrictRouting {
 				checkPathTrimmed = utils.TrimRight(checkPath, '/')
 			}
 			switch {
@@ -80,14 +80,14 @@ func HealthCheck(opts HealthCheckOptions) fiber.Handler {
 				if opts.Service != nil {
 					message = fmt.Sprintf("%s - %s", *opts.Service, message)
 				}
-				return c.Status(fiber.StatusOK).SendString(message)
+				return ctx.Status(fiber.StatusOK).SendString(message)
 			case checkPath == opts.Routes.Readiness || checkPathTrimmed == opts.Routes.Readiness:
-				return probeHandler(c, opts.CheckFunctions)
+				return probeHandler(ctx, opts.CheckFunctions)
 			case checkPath == opts.Routes.Liveness || checkPathTrimmed == opts.Routes.Liveness:
-				return probeHandler(c, opts.CheckFunctions)
+				return probeHandler(ctx, opts.CheckFunctions)
 			}
 		}
 
-		return c.Next()
+		return ctx.Next()
 	}
 }

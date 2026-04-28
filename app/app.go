@@ -4,6 +4,7 @@ import (
 	"tasklist/config"
 	"tasklist/global"
 	"tasklist/middleware"
+	"tasklist/modules"
 
 	"github.com/gofiber/contrib/swagger"
 
@@ -19,7 +20,7 @@ import (
 var ServiceName = "Todo Service"
 
 // Creates and returns a Fiber application with middleware, routes, and database connection.
-func New(params Params) *fiber.App {
+func New(apiRouter *modules.Router) *fiber.App {
 	elemental.Connect(config.Env.DatabaseURL)
 
 	app := fiber.New(fiber.Config{
@@ -77,7 +78,7 @@ func New(params Params) *fiber.App {
 		}))
 	}
 
-	app.Mount("/api", params.Modules)
+	app.Mount("/api", apiRouter.App)
 
 	return app
 }

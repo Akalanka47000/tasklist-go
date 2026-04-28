@@ -4,7 +4,7 @@ import (
 	"tasklist/global"
 	"tasklist/middleware"
 	"tasklist/modules/auth/api/v1/dto"
-	service "tasklist/modules/auth/api/v1/service/contracts"
+	authsvc "tasklist/modules/auth/api/v1/service/contracts"
 	"tasklist/modules/auth/utils/session"
 	. "tasklist/modules/users/api/v1/models"
 
@@ -13,12 +13,12 @@ import (
 )
 
 type Controller struct {
-	service service.Service
+	service authsvc.Service
 }
 
-func new(params Params) *Controller {
+func New(service authsvc.Service) *Controller {
 	return &Controller{
-		service: params.Service,
+		service: service,
 	}
 }
 

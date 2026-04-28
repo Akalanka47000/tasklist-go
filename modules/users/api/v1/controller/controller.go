@@ -5,7 +5,7 @@ import (
 	"tasklist/middleware"
 	"tasklist/modules/users/api/v1/dto"
 	"tasklist/modules/users/api/v1/models"
-	serviceContracts "tasklist/modules/users/api/v1/service/contracts"
+	usersvc "tasklist/modules/users/api/v1/service/contracts"
 
 	fq "github.com/elcengine/elemental/plugins/filterquery"
 	fqm "github.com/elcengine/elemental/plugins/filterquery/middleware"
@@ -14,12 +14,12 @@ import (
 )
 
 type Controller struct {
-	service serviceContracts.Service
+	service usersvc.Service
 }
 
-func new(params Params) *Controller {
+func new(service usersvc.Service) *Controller {
 	return &Controller{
-		service: params.Service,
+		service: service,
 	}
 }
 

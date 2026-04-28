@@ -6,31 +6,18 @@ import (
 
 	"github.com/akalanka47000/go-modkit/routing"
 	"github.com/gofiber/fiber/v2"
-	"go.uber.org/fx"
 )
 
 var versioned = routing.VersionablePrefix("users")
 
-// Init provides the fx module for the user module
-var Init = append(
-	v1.Init,
-	fx.Provide(new),
-)
-
-// Params defines the dependencies for the user module
-type Params struct {
-	fx.In
-	V1 *fiber.App `name:"users:router.v1"`
-}
-
 type Router struct {
-	V1 *fiber.App
+	V1 *v1.Router
 }
 
 // new creates a user module router with versioned sub fiber apps
-func new(params Params) *Router {
+func new(v1 *v1.Router) *Router {
 	return &Router{
-		V1: params.V1,
+		V1: v1,
 	}
 }
 
@@ -38,5 +25,5 @@ func new(params Params) *Router {
 func (r *Router) ConfigureRoutes(app *fiber.App) {
 	app.All("/*", middleware.Internal)
 
-	app.Mount(versioned(1), r.V1)
+	app.Mount(versioned(1), r.V1.App)
 }

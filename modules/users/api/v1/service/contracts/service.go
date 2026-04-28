@@ -1,4 +1,4 @@
-package contracts
+package usersvc
 
 import (
 	"context"

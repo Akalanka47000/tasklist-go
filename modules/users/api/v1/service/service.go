@@ -4,8 +4,8 @@ import (
 	"context"
 	"strings"
 	. "tasklist/modules/users/api/v1/models"
-	repository "tasklist/modules/users/api/v1/repository/contracts"
-	"tasklist/modules/users/api/v1/service/contracts"
+	userrepo "tasklist/modules/users/api/v1/repository/contracts"
+	usersvc "tasklist/modules/users/api/v1/service/contracts"
 	"tasklist/utils/hash"
 
 	elemental "github.com/elcengine/elemental/core"
@@ -14,12 +14,12 @@ import (
 )
 
 type service struct {
-	repo repository.Repository
+	repo userrepo.Repository
 }
 
-func new(params Params) contracts.Service {
+func New(repo userrepo.Repository) usersvc.Service {
 	return &service{
-		repo: params.Repository,
+		repo: repo,
 	}
 }
 

@@ -17,7 +17,7 @@ import (
 func TestUserRepository(t *testing.T) {
 	mt := mtest.New(t, mtest.NewOptions().ClientType(mtest.Mock))
 
-	repo := new()
+	repo := New()
 	mockUser := mocks.GetUser()
 
 	Convey("CreateUser", t, func() {

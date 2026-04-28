@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 	"tasklist/modules/auth/api/v1/dto"
-	contracts "tasklist/modules/auth/api/v1/service/contracts"
+	authsvc "tasklist/modules/auth/api/v1/service/contracts"
 	"tasklist/modules/users/api/v1/models"
-	users "tasklist/modules/users/api/v1/service/contracts"
+	usersvc "tasklist/modules/users/api/v1/service/contracts"
 	"tasklist/utils/hash"
 	jwtx "tasklist/utils/jwt"
 
@@ -14,11 +14,11 @@ import (
 )
 
 type service struct {
-	userService users.Service
+	userService usersvc.Service
 }
 
-func new(params Params) contracts.Service {
-	return &service{userService: params.UserService}
+func New(userService usersvc.Service) authsvc.Service {
+	return &service{userService: userService}
 }
 
 func (s *service) Login(ctx context.Context, email, password string) (models.User, string, string) {

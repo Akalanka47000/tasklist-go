@@ -19,7 +19,7 @@ import (
 func TestUserService(t *testing.T) {
 	Convey("V1", t, func() {
 		mockRepo := repository.NewMockRepository(t)
-		svc := new(Params{Repository: mockRepo})
+		svc := New(mockRepo)
 		ctx := t.Context()
 
 		mockUser := mocks.GetUser()

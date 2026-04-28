@@ -2,9 +2,9 @@ package repository
 
 import (
 	"context"
-	"tasklist/modules/users/api/v1/errors"
+	httperrs "tasklist/modules/users/api/v1/errors"
 	. "tasklist/modules/users/api/v1/models"
-	"tasklist/modules/users/api/v1/repository/contracts"
+	userrepo "tasklist/modules/users/api/v1/repository/contracts"
 
 	elemental "github.com/elcengine/elemental/core"
 	fq "github.com/elcengine/elemental/plugins/filterquery"
@@ -13,7 +13,7 @@ import (
 
 type repository struct{}
 
-func new() contracts.Repository {
+func New() userrepo.Repository {
 	return &repository{}
 }
 
